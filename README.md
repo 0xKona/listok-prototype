@@ -1,3 +1,3 @@
-# Portfolio Project
+# Typescript ReactJS running from Express Server
 
-Portfolio website created using React, Typescript and Express
+React environment for new projects created using React, Typescript and Express
