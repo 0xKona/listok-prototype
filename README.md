@@ -15,5 +15,5 @@ Getting Started:
     <br> Inside the `.env` file you will need to siomply add PORT=`YOUR PORT NUMBER` for example `PORT=3000`
 
 3. Run Listok!:
-    <br> To start run `npm start` in the terminal! It should be running at http://localhost:`YOUR PORT NUMBER`
+    <br> To start run `npm start` in the terminal! It should be running at http://localhost: `YOUR PORT NUMBER`
     <br> If successful you will also see a link in the terminal.
