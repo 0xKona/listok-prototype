@@ -12,7 +12,7 @@ Getting Started:
 
 2. Configureyour `.env` file:
     <br> -> Create a file called '.env' in `server/secrets/`, you will need to create the `secrets` folder in `server` 
-    <br> -> Inside the `.env` file you will need to siomply add PORT=`YOUR PORT NUMBER` for example `PORT=3000`
+    <br> -> Inside the `.env` file you will need to simply add PORT=`YOUR PORT NUMBER` for example `PORT=3000`
 
 3. Run Listok!:
     <br> -> To start run `npm start` in the terminal! It should be running at http://localhost: `YOUR PORT NUMBER`
