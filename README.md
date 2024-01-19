@@ -1,6 +1,6 @@
 # Listok!
 
-Listok is small ReactJS based App that can save a library of your own recipe's, chose your meals for the week and generate a shopping list for you!
+Listok is small ReactJS based App that can save a library of your own recipe's, allow you to choose your meals for the week and generate a shopping list for you!
 
 Requires:
 
