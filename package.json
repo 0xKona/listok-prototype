@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node server/index.js",
     "start-client": "webpack serve --port 3000",
+    "database": "set -a source server/secrets/.env docker-compose up -d",
     "build": "set NODE_ENV=production && webpack"
   },
   "author": "0xKona",
@@ -36,6 +37,7 @@
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "mysql2": "^3.9.0",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
