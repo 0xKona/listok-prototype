@@ -1,16 +1,19 @@
 version: '3.8'
+
 services: 
+
   database:
     image: mysql:8.1
-    restart: unless-stopped
+    restart: always
     environment:
-      - MYSQL_DATABASE=listok_db
-      - MYSQL_ROOT_PASSWORD_FILE=test
+      MYSQL_ROOT_PASSWORD: password
+    secrets:
+      - root_password
     ports:
       - 3306:3306
     volumes:
-      - listok_db:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
-volumes:
-  listok_db:
+secrets:
+  root_password:
+    file: ./server/secrets/database_root_password.txt
