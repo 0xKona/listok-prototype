@@ -1,4 +1,5 @@
 import express from 'express';
+import queries from './database-queries.js';
 
 //Maybe needed later
 // import dotenv from 'dotenv';
@@ -11,6 +12,10 @@ import express from 'express';
 
 const apiRouter = express.Router();
 
+apiRouter.post('/login', async (req, res) => {
+    const result = await login(req.body.id, req.body.email);
+    res.status(200).send(result)
+})
 
 
 

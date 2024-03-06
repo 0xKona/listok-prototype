@@ -7,17 +7,14 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 dotenv.config({ path: path.join(__dirname, './secrets/.env')});
 
-const config = loader();
+// const config = loader();
 const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: process.env.HOST,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     user: 'root',
     password: process.env.DB_PASS,
     database: 'listok_db',
-    port: process.env.DB_PORT,
-    multipleStatements: true,
-    namedPlaceholders: true
-}).promise();
+});
 
 pool.getConnection((error, connection) => {
     if (connection) {
@@ -28,3 +25,6 @@ pool.getConnection((error, connection) => {
 });
 
 const queries = {}
+
+
+export default queries;

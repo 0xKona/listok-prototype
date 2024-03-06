@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { StyleProps } from "../types";
 import { ThemeContext } from "../context/theme-context";
 import { themesObject } from "../context/themes";
+import { LogoutButton } from "./logout";
 
 const ProfileContainer = styled.div`
     height: 50px;
@@ -19,7 +20,7 @@ const ProfileBar = (): JSX.Element => {
 
     return (
         <ProfileContainer>
-            <h2>Profile Here</h2>
+            <LogoutButton />
         </ProfileContainer>
     )
 }
