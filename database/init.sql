@@ -21,9 +21,10 @@ USE `listok_db` ;
 -- Table `listok_db`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `listok_db`.`users` (
-  `user_id` INT NOT NULL,
-  `user_email` VARCHAR(45) NULL,
-  `user_display_name` VARCHAR(45) NULL,
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `google_id` VARCHAR(100) NULL,
+  `user_email` VARCHAR(100) NULL,
+  `user_display_name` VARCHAR(100) NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE)
 ENGINE = InnoDB;

@@ -17,6 +17,16 @@ apiRouter.post('/login', async (req, res) => {
     res.status(200).send(result)
 })
 
+apiRouter.post('/insertUserTest', async (req, res) => {
+    console.log('api-router triggered')
+    const result = await queries.insertUserTest(
+        req.body.userId,
+        req.body.userEmail,
+        req.body.userDisplayName
+    )
+    res.status(200).send(result)
+})
+
 
 
 export default apiRouter

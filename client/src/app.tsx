@@ -4,11 +4,6 @@ import HomePage from "./pages/home";
 import { gapi } from "gapi-script";
 import { UserContext } from "./context/user.context";
 import { LoginPage } from "./pages/login-page";
-import styled from "styled-components";
-
-const AppContainer = styled.div`
-    width: 100%;
-`
 
 const App = () => {
     
@@ -27,15 +22,38 @@ const App = () => {
         gapi.load('client:auth2', start);
     })
 
+    const addUser = async() => {
+        if (userObj.userInfo.googleId) { 
+            const response = await fetch('/api/insertUserTest', {
+                method: 'POST',
+                body: JSON.stringify({
+                    userId: userObj.userInfo.googleId,
+                    userEmail: userObj.userInfo.email,
+                    userDisplayName: userObj.userInfo.name
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log('Api Triggered: ', response)
+        } else {
+            return
+        }
+    }
+
+    useEffect(() => {
+        addUser()
+    }, [userObj.userInfo])
+
     return (
-        <AppContainer>
+        <>
             <GlobalStyle />
             { userObj.loggedIn ?
             <HomePage /> :
             <LoginPage />
             }
            
-        </AppContainer>
+        </>
     )
 }
 

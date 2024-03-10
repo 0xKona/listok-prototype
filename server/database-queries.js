@@ -1,4 +1,4 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 import path from 'path';
 import dotenv from 'dotenv';
 import * as url from 'url';
@@ -12,7 +12,7 @@ const pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: 'root',
-    password: process.env.DB_PASS,
+    password: process.env.MYSQL_ROOT_PASSWORD,
     database: 'listok_db',
 });
 
@@ -24,7 +24,15 @@ pool.getConnection((error, connection) => {
     }
 });
 
-const queries = {}
+const queries = {};
+
+queries.insertUserTest = async (user_id, user_email, user_display_name) => {
+    console.log('query called')
+    const query = 'INSERT INTO users (google_id, user_email, user_display_name) VALUES(?,?,?)';
+    return pool.query(query, [ user_id, user_email, user_display_name ], (error, result) => {
+        return {error, result};
+    });
+};
 
 
 export default queries;
