@@ -8,9 +8,9 @@ import { LoginPage } from "./pages/login-page";
 const App = () => {
     
     const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" //client id here, TODO: Change to import from .env
-    const {userObj} = useContext(UserContext)
+    const {userObj, setNewUserInfo} = useContext(UserContext)
     
-    console.log('User Info: ', userObj)
+    console.log('User Info:: ', userObj)
     
     useEffect(() => {
         const start = () => {
@@ -22,9 +22,9 @@ const App = () => {
         gapi.load('client:auth2', start);
     })
 
-    const addUser = async() => {
+    const loginWithServer = async() => {
         if (userObj.userInfo.googleId) { 
-            const response = await fetch('/api/insertUserTest', {
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 body: JSON.stringify({
                     userId: userObj.userInfo.googleId,
@@ -35,15 +35,16 @@ const App = () => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log('Api Triggered: ', response)
+            const result = await response.json()
+            setNewUserInfo({...userObj.userInfo, listokUserId: result[0].user_id}, true)
         } else {
             return
         }
     }
 
     useEffect(() => {
-        addUser()
-    }, [userObj.userInfo])
+        loginWithServer();
+    }, [userObj.userInfo.googleId])
 
     return (
         <>

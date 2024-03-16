@@ -7,7 +7,6 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 dotenv.config({ path: path.join(__dirname, './secrets/.env')});
 
-// const config = loader();
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -20,16 +19,24 @@ pool.getConnection((error, connection) => {
     if (connection) {
         console.log('Database connected succesfully')
     } else {
-        console.log('Error connecting to database, the following error occured:', error)
+        console.log('Error connecting to database, the following error occured: ', error)
     }
 });
 
 const queries = {};
 
-queries.insertUserTest = async (user_id, user_email, user_display_name) => {
-    console.log('query called')
+queries.createNewUser = async (user_id, user_email, user_display_name) => {
+    console.log('createNewUser query called')
     const query = 'INSERT INTO users (google_id, user_email, user_display_name) VALUES(?,?,?)';
     return pool.query(query, [ user_id, user_email, user_display_name ], (error, result) => {
+        return {error, result};
+    });
+};
+
+queries.checkIfUserExists = async (google_id) => {
+    console.log('checkIfUserExists query called')
+    const query = 'SELECT * from `users` WHERE `google_id` = ?';
+    return pool.query(query, [ google_id ], (error, result) => {
         return {error, result};
     });
 };

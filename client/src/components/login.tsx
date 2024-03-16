@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import GoogleLogin from 'react-google-login';
 import { UserContext } from '../context/user.context';
 
-const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" //client id here TODO: Change to import from .env
+const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" //TODO: client id here TODO: Change to import from .env
 
 export const LoginButton = () => {
 
