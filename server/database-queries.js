@@ -26,7 +26,6 @@ pool.getConnection((error, connection) => {
 const queries = {};
 
 queries.createNewUser = async (user_id, user_email, user_display_name) => {
-    console.log('createNewUser query called')
     const query = 'INSERT INTO users (google_id, user_email, user_display_name) VALUES(?,?,?)';
     return pool.query(query, [ user_id, user_email, user_display_name ], (error, result) => {
         return {error, result};
@@ -34,7 +33,6 @@ queries.createNewUser = async (user_id, user_email, user_display_name) => {
 };
 
 queries.checkIfUserExists = async (google_id) => {
-    console.log('checkIfUserExists query called')
     const query = 'SELECT * from `users` WHERE `google_id` = ?';
     return pool.query(query, [ google_id ], (error, result) => {
         return {error, result};

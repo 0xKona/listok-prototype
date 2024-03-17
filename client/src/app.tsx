@@ -7,11 +7,10 @@ import { LoginPage } from "./pages/login-page";
 
 const App = () => {
     
-    const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" //client id here, TODO: Change to import from .env
-    const {userObj, setNewUserInfo} = useContext(UserContext)
+    const {userObj, setNewUserInfo, clientId} = useContext(UserContext)
     
     console.log('User Info:: ', userObj)
-    
+
     useEffect(() => {
         const start = () => {
             gapi.client.init({
