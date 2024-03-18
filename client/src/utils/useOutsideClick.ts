@@ -5,7 +5,6 @@
 //   ->  ref: this is your useRef for the Component
 //   ->  callback: this the function you want to execute when user clicks outside of the useRef
 
-
 import { useEffect } from 'react';
 //TODO : Update Types
 const useOutsideClick = (ref: any, callback: any) => {

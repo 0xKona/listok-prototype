@@ -20,7 +20,7 @@ const RecipeListContainer = styled.div`
 `
 
 const HomePage = (): JSX.Element => {
-    const [showRecipeEditor, setShowRecipeEditor] = useState(false)
+    const [showRecipeEditor, setShowRecipeEditor] = useState(true);
 
     const days = ['mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
