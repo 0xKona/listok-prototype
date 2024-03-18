@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client'
 import App from './app'
 import { ThemeProvider } from './context/theme-context'
 import { UserContextProvider } from './context/user.context'
+import { StyleSheetManager } from 'styled-components'
+import isPropValid from '@emotion/is-prop-valid'
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
-    <UserContextProvider>
-        <ThemeProvider>
-            <App />
-        </ThemeProvider>
-    </UserContextProvider>
+    <StyleSheetManager shouldForwardProp={(validName) => isPropValid(validName)}>
+        <UserContextProvider>
+            <ThemeProvider>
+                <App />
+            </ThemeProvider>
+        </UserContextProvider>
+    </StyleSheetManager>
 )

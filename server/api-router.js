@@ -3,32 +3,57 @@ import queries from './database-queries.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { OAuth2Client } from 'google-auth-library';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, './secrets/.env')});
 
+const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID)
+
 const apiRouter = express.Router();
 
 apiRouter.post('/login', async (req, res) => {
-    const checkExistingUser = async() => {
-        const response = await queries.checkIfUserExists(req.body.userId);
+    
+    const { token } = req.body;
 
-        if (response && response[0].length > 0) {
-            return response[0]
-        } else {
-            const addNewUserResult = await queries.createNewUser(
-                req.body.userId,
-                req.body.userEmail,
-                req.body.userDisplayName
-            )
-            return addNewUserResult
+    try {
+        // Verify the ID token asynchronously
+        const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.GOOGLE_OAUTH_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+        });
+        
+        const payload = ticket.getPayload();
+        const googleId = payload.sub
+
+        const checkExistingUser = async() => {
+            const response = await queries.checkIfUserExists(googleId);
+    
+            if (response && response[0].length > 0) {
+                return response[0]
+            } else {
+                await queries.createNewUser(
+                    payload.sub,
+                    payload.email,
+                    payload.name
+                )
+                const user = await queries.checkIfUserExists(googleId)
+                return user[0]
+            }
         }
-    }
-
-    const result = await checkExistingUser()
-
-    res.status(200).send(result)
+    
+        const result = await checkExistingUser()
+    
+        res.status(200).send({listokId: result[0].user_id});
+    
+        // res.status(200).json({ message: "Successfully authenticated", user: payload });
+      } catch (error) {
+        console.error("Error verifying Google token:", error);
+        res.status(401).json({ message: "Unauthorized" });
+      }
+    
 })
 
 
