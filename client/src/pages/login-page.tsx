@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { LoginButton } from "../components/login";
+import { LoginButton } from "../components/login-button";
 
 const Container = styled.div`
     width: 100vw;

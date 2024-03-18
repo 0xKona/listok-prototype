@@ -22,7 +22,6 @@ export const LoginButton = () => {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('Success:', data);
             if (response.ok) {
               setNewUserInfo({...res.profileObj, listokId: data.listokId}, true)
             }

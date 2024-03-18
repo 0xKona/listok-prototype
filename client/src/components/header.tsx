@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ThemeContext } from "../context/theme-context";
 import { themesObject } from "../context/themes";
 import { StyleProps } from "../types";
-import ProfileBar from "./profile-bar";
+import ProfileBar from "./profile/profile-bar";
 
 const HeaderContainer = styled.div<StyleProps>`
     height: 50px;

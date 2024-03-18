@@ -1,6 +1,14 @@
 import React, { useCallback, useContext } from 'react';
 import { GoogleLogout } from 'react-google-login';
-import { UserContext } from '../context/user.context';
+import { UserContext } from '../../context/user.context';
+import styled from 'styled-components';
+
+const SignOutBtnWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 
 export const LogoutButton = () => {
     
@@ -12,12 +20,12 @@ export const LogoutButton = () => {
     }
 
     return (
-        <div id="signOutButton">
+        <SignOutBtnWrapper>
             <GoogleLogout
                 clientId={clientId}
-                buttonText='Logout'
+                buttonText='Logout of Google'
                 onLogoutSuccess={onSuccess}
             />
-        </div>
+        </SignOutBtnWrapper>
     )
 }

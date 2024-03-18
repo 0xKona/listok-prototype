@@ -12,14 +12,18 @@ const App = () => {
     console.log('User Info:: ', userObj)
 
     useEffect(() => {
-        const start = () => {
-            gapi.client.init({
-                clientId: clientId,
-                scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid"
-            })
+        const start = async() => {
+            try {
+                gapi.client.init({
+                    clientId: clientId,
+                    scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid"
+                })
+            } catch (error) {
+                console.error("Error loading GAPI client for API", error);    
+            }
         };
         gapi.load('client:auth2', start);
-    })
+    }, [])
 
     return (
         <>

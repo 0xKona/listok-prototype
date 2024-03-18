@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { StyleProps } from "../types";
-import { ThemeContext } from "../context/theme-context";
-import { themesObject } from "../context/themes";
-import { LogoutButton } from "./logout";
-import { UserContext } from "../context/user.context";
+import { StyleProps } from "../../types";
+import { ThemeContext } from "../../context/theme-context";
+import { themesObject } from "../../context/themes";
+import { LogoutButton } from "./logout-button";
+import { UserContext } from "../../context/user.context";
+import ProfileMenu from "./profile-dropdown";
+import useOutsideClick from "../../utils/useOutsideClick";
 
 const ProfileContainer = styled.div`
     height: 50px;
@@ -39,25 +41,25 @@ const DropDownMenuContainer = styled.div`
 `
 
 const ProfileBar = (): JSX.Element => {
-    // console.log('ProfileBar loaded')
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const {userObj} = useContext(UserContext);
 
-    // console.log('Show Menu: ', showMenu)
-    // console.log(userObj.userInfo.imageUrl)
+    const menuRef = useRef(null);
+
+    useOutsideClick(menuRef, () => {
+        if (showMenu) setShowMenu(false);
+    })
+
     return (
         <>
-            <ProfileContainer onClick={() => setShowMenu(!showMenu)}>
+            <ProfileContainer ref={menuRef} onClick={() => setShowMenu(!showMenu)}>
                 <ProfilePictureWrapper>
                     <ProfilePicture src={userObj.userInfo.imageUrl} alt="Uh-oh!" referrerPolicy="no-referrer"/>
                 </ProfilePictureWrapper>
             </ProfileContainer>
                 
             {showMenu && 
-                <DropDownMenuContainer>
-                    <p>HELLO!</p>
-                    <LogoutButton/>
-                </DropDownMenuContainer>
+                <ProfileMenu />
             }
         </>
     )
