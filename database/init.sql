@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `listok_db`.`recipes` (
   `recipe_desc` MEDIUMTEXT NULL,
   `recipe_method` MEDIUMTEXT NULL,
   `recipe_image` LONGBLOB NULL,
+  `recipe_ingredients` MEDIUMTEXT NULL,
   `users_user_id` INT NOT NULL,
   PRIMARY KEY (`recipe_id`, `users_user_id`),
   UNIQUE INDEX `recipe_id_UNIQUE` (`recipe_id` ASC) VISIBLE,

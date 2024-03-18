@@ -12,6 +12,7 @@ const HeaderContainer = styled.div<StyleProps>`
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
 `
 
 const Header = (): JSX.Element => {

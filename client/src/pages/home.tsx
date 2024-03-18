@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/header";
 import styled from "styled-components";
 import DayCard from "../components/day-card";
 import WeekNavigator from "../components/week-navigator";
 import RecipeLibrary from "../components/recipe-library";
 import ShoppingList from "../components/shopping-list";
+import RecipeEditor from "../components/recipe-editor/recipe-editor";
 
 const Testdaycontainer = styled.div`
     display:flex;
@@ -19,24 +20,31 @@ const RecipeListContainer = styled.div`
 `
 
 const HomePage = (): JSX.Element => {
+    const [showRecipeEditor, setShowRecipeEditor] = useState(true)
 
     const days = ['mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
     return (
         <>
             <Header />
-            <WeekNavigator />
-            <Testdaycontainer>
-            {
-                days.map(weekday =>(
-                    <DayCard key={weekday} day={weekday}/>
-                ))
+            {showRecipeEditor ?
+                <RecipeEditor setShowRecipeEditor={setShowRecipeEditor}/>
+            :
+                <>
+                    <WeekNavigator />
+                    <Testdaycontainer>
+                    {
+                        days.map(weekday =>(
+                            <DayCard key={weekday} day={weekday}/>
+                        ))
+                    }
+                    </Testdaycontainer>
+                    <RecipeListContainer>
+                        <RecipeLibrary setShowRecipeEditor={setShowRecipeEditor}/>
+                        <ShoppingList />
+                    </RecipeListContainer>
+                </>
             }
-            </Testdaycontainer>
-            <RecipeListContainer>
-                <RecipeLibrary />
-                <ShoppingList />
-            </RecipeListContainer>
         </>
     )
 

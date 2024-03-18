@@ -11,12 +11,13 @@ const Container = styled.div`
     border-radius: 10px;
     padding: 10px;
 `
-
-const RecipeLibrary = (): JSX.Element => {
+//TODO : types
+const RecipeLibrary = ({setShowRecipeEditor}: any): JSX.Element => {
 
     return (
         <Container>
             <p>Recipe Library</p>
+            <button onClick={() => setShowRecipeEditor(true)}>Open Recipe Editor</button>
         </Container>
     )
 }

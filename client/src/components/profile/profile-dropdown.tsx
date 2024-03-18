@@ -10,6 +10,7 @@ const DropDownMenuContainer = styled.div`
     width: 200px;
     height: fit-content;
     position: absolute;
+    z-index: 10;
     right: 10px;
     top: 60px;
     padding: 20px;
