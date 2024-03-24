@@ -1,5 +1,5 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { MdDelete } from "react-icons/md";
 
@@ -7,7 +7,8 @@ const Container = styled.div`
     display: flex;
     width: 100%;
     background-color: orange;
-`
+`;
+
 const DeleteButton = styled.div`
     height: 100%;
     aspect-ratio: 1/1;
@@ -15,25 +16,41 @@ const DeleteButton = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    &:hover{
+    &:hover {
         background-color: darkgrey;
     }
-`
+`;
 
-const IngredientEditor = ({ingredientsArray, setIngredientsArray, ingredientData, ingredientIndex}: any) => {
-    console.log('IG: ', ingredientData)
-    const [ingredientName, setIngredientName] = useState(ingredientData.name);
-    const [measureBy, setMeasureBy] = useState(ingredientData.measureBy);
-    const [ingredientAmount, setIngredientAmount] = useState(ingredientData.quantity);
-    
-    const [newIngredientObj, setNewIngredientObject] = useState<any>(ingredientData)
+const IngredientEditor = ({ ingredientsArray, setIngredientsArray, ingredientData, ingredientIndex }: any) => {
+    // Using state to directly control input values
+    const [ingredientName, setIngredientName] = useState<string>(ingredientData.ingredientName);
+    const [measureBy, setMeasureBy] = useState<string>(ingredientData.measureBy);
+    const [ingredientAmount, setIngredientAmount] = useState<string>(ingredientData.quantity);
 
-    const [selectedOption, setSelectedOption] = useState<any>(true);
-    const measureByOptions = [{label: 'Quantity', value: true}, {label: 'Amount', value: false}]
+    const measureByOptions = [{ label: 'Quantity', value: 'true' }, { label: 'Amount', value: 'false' }];
 
-    const handleChange = (event: SelectChangeEvent<boolean>) => {
-        setSelectedOption(event.target.value);
-        event.target.value ? setMeasureBy(measureByOptions[0]) : setMeasureBy(measureByOptions[1])
+    const handleChange = (event: SelectChangeEvent) => {
+        const newMeasureBy = event.target.value === 'true' ? 'Quantity' : 'Amount';
+        updateIngredient({ ...ingredientData, measureBy: newMeasureBy });
+        setMeasureBy(newMeasureBy);
+    };
+
+    const updateIngredient = (updatedData: any) => {
+        const updatedIngredients = ingredientsArray.map((item: any, index: number) => 
+            index === ingredientIndex ? updatedData : item
+        );
+        setIngredientsArray(updatedIngredients);
+    };
+
+    // Handlers for text fields
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIngredientName(event.target.value);
+        updateIngredient({ ...ingredientData, ingredientName: event.target.value });
+    };
+
+    const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIngredientAmount(event.target.value);
+        updateIngredient({ ...ingredientData, quantity: event.target.value });
     };
 
     const deleteIngredient = () => {
@@ -41,51 +58,30 @@ const IngredientEditor = ({ingredientsArray, setIngredientsArray, ingredientData
         setIngredientsArray(newArray);
     };
 
-    useEffect(() => {
-        setNewIngredientObject({ingredientName: ingredientName, measureBy: measureBy, quantity: ingredientAmount})
-    }, [ingredientName, measureBy, ingredientAmount])
-    
-    useEffect(() => {
-        // Only run if newIngredientObj is defined
-        if (newIngredientObj) {
-            // Create a new array with the updated ingredient
-            const updatedIngredientsArray = ingredientsArray.map((item: any, index: number) => {
-                if (index === ingredientIndex) {
-                    return newIngredientObj;
-                }
-                return item;
-            });
-    
-            // Update the parent component's state with the new array
-            setIngredientsArray(updatedIngredientsArray);
-        }
-    }, [newIngredientObj]);
-
-    console.log('New Ingredient Obj: ', newIngredientObj)
-    return(
+    return (
         <Container>
             <TextField
                 id="Name"
                 label="Name"
                 variant="standard"
                 placeholder="Name"
-                defaultValue={ingredientName}
-                onChange={(e) => setIngredientName(e.target.value)}
+                value={ingredientName}
+                onChange={handleNameChange}
             />
             <FormControl size="small">
-            <Select
-                labelId="measure-select-label"
-                id="measure-select"
-                value={selectedOption}
-                onChange={handleChange}
-                variant="filled"
-            >
-                {measureByOptions.map((option, index) => (
-                    <MenuItem key={index} value={option.value.toString()}>
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </Select>
+                <Select
+                    labelId="measure-select-label"
+                    id="measure-select"
+                    value={measureBy === 'Quantity' ? 'true' : 'false'}
+                    onChange={handleChange}
+                    variant="filled"
+                >
+                    {measureByOptions.map((option, index) => (
+                        <MenuItem key={index} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </Select>
             </FormControl>
 
             <TextField
@@ -93,14 +89,14 @@ const IngredientEditor = ({ingredientsArray, setIngredientsArray, ingredientData
                 label="Amount"
                 variant="standard"
                 placeholder="Amount"
-                defaultValue={ingredientName}
-                onChange={(e) => setIngredientAmount(e.target.value)}
+                value={ingredientAmount}
+                onChange={handleAmountChange}
             />
             <DeleteButton onClick={deleteIngredient}>
                 <MdDelete size={25}/>
             </DeleteButton>
         </Container>
-    )
-}
+    );
+};
 
 export default IngredientEditor;
