@@ -4,23 +4,26 @@ import { AiOutlineClose } from "react-icons/ai";
 import StepTracker from "./step-tracker";
 import DetailsForm from "./details-form";
 import { UserContext } from "../../context/user.context";
+import MethodForm from "./method-form";
+import IngredientsForm from "./ingredients-form";
 
 const Wrapper = styled.div`
     width: 100%;
     height: 90%;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    /* align-items: center; */
     background-color: cyan;
-    padding: 20px;
+    padding: 20px 0px;
 `
 const RecipeEditorContainer = styled.div`
-    width: 90%;
-    min-width: 580px;
+    width: 700px;
+    min-width: 400px;
     max-width: 1500px;
+    min-height: fit-content;
     height: 90%;
     min-height: 600px;
-    background-color: orange;
+    background-color: #b30047;
     padding: 20px;
     position: relative;
     border-radius: 15px;
@@ -48,11 +51,15 @@ const FormWrapper = styled.div`
     margin: 10px 0;
     background-color: lightgrey;
     flex-grow: 1;
-    width: 50%;
+    width: 400px;
+    max-height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px;
+`
+const CurrentTabTitle = styled.h1`
+    margin: 20px 0px;;
 `
 
 interface props {
@@ -67,14 +74,14 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
         {label: 'Method', value: 1, complete: false}, 
         {label: 'Ingredients', value: 2, complete: false}
     ]);
-    console.log('Steps : ', steps)
+    // console.log('Steps : ', steps)
     const [currentStep, setCurrentStep] = useState<any>({label: "Details", value: 0});
     const [recipeInfo, setRecipeInfo] = useState({
         recipe_name: undefined,
         recipe_desc: undefined,
         recipe_method: undefined,
         recipe_image: undefined,
-        recipe_ingredients: undefined,
+        recipe_ingredients: [{ingredientName: '', measureBy: '', quantity: ''}],
         users_user_id: userObj.userInfo.listokId
     })
     console.log('RecipeInfo: ', recipeInfo)
@@ -87,8 +94,16 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
                 </CloseButton>
                 <StepTracker steps={steps} currentStep={currentStep} setCurrentStep={setCurrentStep} />
                 <FormWrapper>
-                    <h1>{currentStep.label}</h1>
-                    {currentStep.value === 0 && <DetailsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>}
+                    <CurrentTabTitle>{currentStep.label}</CurrentTabTitle>
+                    {currentStep.value === 0 && 
+                        <DetailsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>
+                    }
+                    {currentStep.value === 1 && 
+                        <MethodForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>
+                    }
+                    {currentStep.value === 2 &&
+                        <IngredientsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>
+                    }
 
                 </FormWrapper>
             </RecipeEditorContainer>

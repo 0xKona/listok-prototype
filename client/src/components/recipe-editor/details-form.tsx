@@ -1,8 +1,7 @@
-import { Box, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { muiInputStyles } from "../../styles/global";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'; // Import CloudUpload icon
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 
@@ -10,7 +9,6 @@ import Button from '@mui/material/Button';
 const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    /* background-color: cyan; */
     width: 400px;
     max-width: 100%;
     height: 80%;
@@ -20,9 +18,9 @@ const NavBtnContainer = styled.div`
     max-width: 100%;
     flex-grow: 1;
     display: flex;
+    align-items: flex-end;
     justify-content: flex-end;
     padding: 20px 0px;
-    /* background-color: lightgreen; */
 `
 const ImageDropBox = styled.label<{ bgImage?: string }>`
     display: flex;
@@ -73,6 +71,11 @@ const DetailsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo
     const [nameErrors, setNameErrors] = useState<string[] | null>(null);
     const [recipeImage, setRecipeImage] = useState<string>(recipeInfo.recipe_image);
 
+    useEffect(() => {
+        if (recipeName) {
+            validateRecipeName(recipeName)
+        }
+    }, [])
 
     const validateRecipeName = (input: string): void => {
         const errors: string[] = [];
