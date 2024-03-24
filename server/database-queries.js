@@ -2,6 +2,7 @@ import mysql from 'mysql2/promise';
 import path from 'path';
 import dotenv from 'dotenv';
 import * as url from 'url';
+import { promises as fs } from 'fs'; // Node.js File System module with Promises
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
@@ -37,6 +38,26 @@ queries.checkIfUserExists = async (google_id) => {
     return pool.query(query, [ google_id ], (error, result) => {
         return {error, result};
     });
+};
+
+queries.insertRecipe = async (recipeData) => {
+    const { recipe_name, recipe_desc, recipe_method, recipe_ingredients, users_user_id, recipe_image } = recipeData;
+
+    const query = `
+        INSERT INTO listok_db.recipes (
+            recipe_name, recipe_desc, recipe_method, recipe_image, 
+            recipe_ingredients, users_user_id
+        ) VALUES (?, ?, ?, ?, ?, ?);
+    `;
+
+    await pool.execute(query, [
+        recipe_name,
+        recipe_desc,
+        recipe_method,
+        recipe_image, // Directly use the buffer from multer's memory storage
+        recipe_ingredients,
+        users_user_id,
+    ]);
 };
 
 

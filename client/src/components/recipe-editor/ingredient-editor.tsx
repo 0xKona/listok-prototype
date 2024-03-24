@@ -6,7 +6,7 @@ import { MdDelete } from "react-icons/md";
 const Container = styled.div`
     display: flex;
     width: 100%;
-    background-color: orange;
+    margin-top: 10px;
 `;
 
 const DeleteButton = styled.div`
@@ -16,6 +16,8 @@ const DeleteButton = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 -1px 0 #747474;
     &:hover {
         background-color: darkgrey;
     }
@@ -24,16 +26,7 @@ const DeleteButton = styled.div`
 const IngredientEditor = ({ ingredientsArray, setIngredientsArray, ingredientData, ingredientIndex }: any) => {
     // Using state to directly control input values
     const [ingredientName, setIngredientName] = useState<string>(ingredientData.ingredientName);
-    const [measureBy, setMeasureBy] = useState<string>(ingredientData.measureBy);
     const [ingredientAmount, setIngredientAmount] = useState<string>(ingredientData.quantity);
-
-    const measureByOptions = [{ label: 'Quantity', value: 'true' }, { label: 'Amount', value: 'false' }];
-
-    const handleChange = (event: SelectChangeEvent) => {
-        const newMeasureBy = event.target.value === 'true' ? 'Quantity' : 'Amount';
-        updateIngredient({ ...ingredientData, measureBy: newMeasureBy });
-        setMeasureBy(newMeasureBy);
-    };
 
     const updateIngredient = (updatedData: any) => {
         const updatedIngredients = ingredientsArray.map((item: any, index: number) => 
@@ -63,31 +56,16 @@ const IngredientEditor = ({ ingredientsArray, setIngredientsArray, ingredientDat
             <TextField
                 id="Name"
                 label="Name"
-                variant="standard"
+                variant="filled"
                 placeholder="Name"
                 value={ingredientName}
                 onChange={handleNameChange}
             />
-            <FormControl size="small">
-                <Select
-                    labelId="measure-select-label"
-                    id="measure-select"
-                    value={measureBy === 'Quantity' ? 'true' : 'false'}
-                    onChange={handleChange}
-                    variant="filled"
-                >
-                    {measureByOptions.map((option, index) => (
-                        <MenuItem key={index} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
 
             <TextField
                 id="Amount"
                 label="Amount"
-                variant="standard"
+                variant="filled"
                 placeholder="Amount"
                 value={ingredientAmount}
                 onChange={handleAmountChange}

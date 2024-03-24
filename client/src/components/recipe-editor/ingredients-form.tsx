@@ -13,6 +13,8 @@ const FormContainer = styled.div`
     height: 80%;
     flex-grow: 1;
     overflow-y: scroll;
+    padding: 10px;
+    align-items: center;
 `
 const NavBtnContainer = styled.div`
     height: 50px; 
@@ -23,12 +25,6 @@ const NavBtnContainer = styled.div`
     padding: 20px 0px;
 `
 
-const muiMethodInputStyles = {
-    width: '100%',
-    height: '100%',
-    marginTop: "15px"
-}
-
 interface Step {
     label: string;
     value: number;
@@ -37,13 +33,12 @@ interface Step {
 
 interface IngredientInterface {
     ingredientName: string, 
-    measureBy: string, 
     quantity: string
 }
 
-const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo}: any) => {
+const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo, uploadRecipe}: any) => {
     const [ingredientsArray, setIngredientsArray] = useState<any>(recipeInfo.recipe_ingredients);
-    console.log('Recipe Info At Load: ', recipeInfo)
+
     useEffect(() => {
         setRecipeInfo((prevRecipeInfo: any) => ({
             ...prevRecipeInfo,
@@ -52,13 +47,6 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
     }, [ingredientsArray])
     
     const handleSubmit = () => {
-        // setRecipeInfo((prevRecipeInfo: any) => ({
-        //     ...prevRecipeInfo,
-        //     recipe_ingredients: ingredientsArray
-        //   }));
-        setCurrentStep({label: 'Ingredients', value: 2, complete: false});
-
-        // Update steps to mark 'Details' as complete
         const updatedSteps = steps.map((step: Step) => {
             if (step.label === 'Ingredients') {
                 return { ...step, complete: true }; // Update the 'Details' step to be complete
@@ -66,13 +54,10 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
             return step;
         });
         setSteps(updatedSteps); // Update the steps state
+        uploadRecipe(recipeInfo);
     }
 
     const handleBack = () => {
-        // setRecipeInfo((prevRecipeInfo: any) => ({
-        //     ...prevRecipeInfo,
-        //     recipe_ingredients: ingredientsArray
-        //   }));
         setCurrentStep({label: 'Method', value: 1, complete: false});
 
         // Update steps to mark 'Details' as complete
@@ -86,11 +71,10 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
     }
 
     const addNewIngredient = () => {
-        const newArray = [...ingredientsArray, {ingredientName: '', measureBy: '', quantity: ''}];
-        console.log('New Array: ',newArray)
+        const newArray = [...ingredientsArray, {ingredientName: '', quantity: ''}];
         setIngredientsArray(newArray)
     }
-    // console.log('Ingredients Array: ', ingredientsArray)
+    
     return (
         <>
             <Button onClick={addNewIngredient}>Add New</Button>

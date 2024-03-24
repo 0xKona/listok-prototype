@@ -67,6 +67,16 @@ interface props {
     recipeId?: number
 }
 
+interface RecipeInfo {
+    recipe_name: string;
+    recipe_desc: string;
+    recipe_method: string;
+    recipe_image: string; // Assuming this is a blob URL in string format
+    recipe_ingredients: { ingredientName: string; quantity: string; measureBy: string }[];
+    users_user_id: string; // Adjust the type as necessary
+}
+
+
 const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
     const {userObj} = useContext(UserContext)
     const [steps, setSteps] = useState([
@@ -81,11 +91,45 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
         recipe_desc: undefined,
         recipe_method: undefined,
         recipe_image: undefined,
-        recipe_ingredients: [{ingredientName: '', measureBy: '', quantity: ''}],
+        recipe_ingredients: [{ingredientName: '', quantity: ''}],
         users_user_id: userObj.userInfo.listokId
     })
     console.log('RecipeInfo: ', recipeInfo)
     // console.log(currentStep)
+
+    async function uploadRecipe(recipe: any) {
+        try {
+            // Convert blob URL to blob
+            const response = await fetch(recipe.recipe_image);
+            const blob = await response.blob();
+    
+            // Prepare FormData
+            const formData = new FormData();
+            formData.append("recipe_name", recipe.recipe_name);
+            formData.append("recipe_desc", recipe.recipe_desc);
+            formData.append("recipe_method", recipe.recipe_method);
+            formData.append("recipe_image", blob, "recipe_image.jpg"); // Assuming image name
+            formData.append("recipe_ingredients", JSON.stringify(recipe.recipe_ingredients));
+            formData.append("users_user_id", recipe.users_user_id.toString());
+    
+            // Send FormData
+            const apiResponse = await fetch('/api/uploadRecipe', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!apiResponse.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            const responseData = await apiResponse.json();
+            console.log('Success:', responseData);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+
     return(
         <Wrapper>
             <RecipeEditorContainer>
@@ -102,7 +146,7 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
                         <MethodForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>
                     }
                     {currentStep.value === 2 &&
-                        <IngredientsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>
+                        <IngredientsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo} uploadRecipe={uploadRecipe}/>
                     }
 
                 </FormWrapper>

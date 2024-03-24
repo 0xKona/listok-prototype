@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { OAuth2Client } from 'google-auth-library';
+import multer from 'multer';
 
+const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,6 +57,30 @@ apiRouter.post('/login', async (req, res) => {
       }
     
 })
+
+apiRouter.post('/uploadRecipe', upload.single('recipe_image'), async (req, res) => {
+
+  try {
+      // Combine form fields and the file data
+      const recipeData = {
+          recipe_name: req.body.recipe_name,
+          recipe_desc: req.body.recipe_desc,
+          recipe_method: req.body.recipe_method,
+          recipe_ingredients: req.body.recipe_ingredients, // Assuming JSON string
+          users_user_id: req.body.users_user_id,
+          recipe_image: req.file.buffer, // File's memory buffer
+      };
+
+      // Insert into database
+      await queries.insertRecipe(recipeData);
+
+      res.status(200).json({ message: "Recipe uploaded successfully" });
+  } catch (error) {
+      console.error('Error uploading recipe:', error);
+      res.status(500).json({ message: "Error uploading recipe" });
+  }
+});
+
 
 
 
