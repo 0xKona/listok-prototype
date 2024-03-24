@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import StepTracker from "./step-tracker";
 import DetailsForm from "./details-form";
+import { UserContext } from "../../context/user.context";
 
 const Wrapper = styled.div`
     width: 100%;
@@ -60,19 +61,34 @@ interface props {
 }
 
 const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
-    const [currentStep, setCurrentStep] = useState<number>(1);
-    const stepName = () => currentStep === 1 ? "Details" : currentStep === 2 ? "Method" : "Ingredients"
-
+    const {userObj} = useContext(UserContext)
+    const [steps, setSteps] = useState([
+        {label: 'Details', value: 0, complete: false}, 
+        {label: 'Method', value: 1, complete: false}, 
+        {label: 'Ingredients', value: 2, complete: false}
+    ]);
+    console.log('Steps : ', steps)
+    const [currentStep, setCurrentStep] = useState<any>({label: "Details", value: 0});
+    const [recipeInfo, setRecipeInfo] = useState({
+        recipe_name: undefined,
+        recipe_desc: undefined,
+        recipe_method: undefined,
+        recipe_image: undefined,
+        recipe_ingredients: undefined,
+        users_user_id: userObj.userInfo.listokId
+    })
+    console.log('RecipeInfo: ', recipeInfo)
+    // console.log(currentStep)
     return(
         <Wrapper>
             <RecipeEditorContainer>
                 <CloseButton onClick={() => setShowRecipeEditor(false)}>
                     <AiOutlineClose color="black" size={30}/>
                 </CloseButton>
-                <StepTracker currentStep={currentStep} setCurrentStep={setCurrentStep} />
+                <StepTracker steps={steps} currentStep={currentStep} setCurrentStep={setCurrentStep} />
                 <FormWrapper>
-                    <h1>{stepName()}</h1>
-                    {currentStep === 1 && <DetailsForm />}
+                    <h1>{currentStep.label}</h1>
+                    {currentStep.value === 0 && <DetailsForm steps={steps} setSteps={setSteps} setCurrentStep={setCurrentStep} recipeInfo={recipeInfo} setRecipeInfo={setRecipeInfo}/>}
 
                 </FormWrapper>
             </RecipeEditorContainer>

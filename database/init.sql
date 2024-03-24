@@ -34,7 +34,7 @@ ENGINE = InnoDB;
 -- Table `listok_db`.`recipes`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `listok_db`.`recipes` (
-  `recipe_id` INT NOT NULL,
+  `recipe_id` INT NOT NULL AUTO_INCREMENT,
   `recipe_name` VARCHAR(100) NULL,
   `recipe_desc` MEDIUMTEXT NULL,
   `recipe_method` MEDIUMTEXT NULL,

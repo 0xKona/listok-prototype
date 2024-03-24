@@ -12,3 +12,8 @@ export default createGlobalStyle`
         margin: 0 auto;
     }
 `
+
+export const muiInputStyles = {
+    width: "100%",
+    marginTop: "15px"
+}
