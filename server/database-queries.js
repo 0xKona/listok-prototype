@@ -91,5 +91,37 @@ queries.updateRecipe = async (recipeData) => {
     ]);
 };
 
+queries.getUserRecipes = async (userId, page, limit) => {
+    // Convert page and limit to numbers to ensure proper query execution
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const query = `
+        SELECT * FROM recipes
+        WHERE users_user_id = ?
+        LIMIT ? OFFSET ?;
+    `;
+
+    // Ensure that the variables passed to pool.execute are of the correct type
+    const [recipes] = await pool.query(query, [userId, limitNumber, offset]);
+    return recipes;
+};
+
+queries.fetchImageData = async (imageId) => {
+    const query = `SELECT image_data FROM images WHERE image_id = ?`;
+    try {
+        const [rows] = await pool.execute(query, [imageId]);
+        if (rows.length > 0) {
+            // Assuming image_data is stored as a blob, which is returned as a Buffer
+            return rows[0].image_data;
+        }
+        return null; // Return null if no image is found
+    } catch (error) {
+        console.error('Error fetching image data:', error);
+        throw error; // Rethrow or handle as appropriate for your application
+    }
+};
+
 
 export default queries;

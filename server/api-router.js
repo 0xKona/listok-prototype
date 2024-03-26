@@ -50,31 +50,24 @@ apiRouter.post('/login', async (req, res) => {
     
         res.status(200).send({listokId: result[0].user_id});
     
-        // res.status(200).json({ message: "Successfully authenticated", user: payload });
       } catch (error) {
         console.error("Error verifying Google token:", error);
         res.status(401).json({ message: "Unauthorized" });
       }
-    
-})
+});
 
 apiRouter.post('/uploadRecipe', upload.single('recipe_image'), async (req, res) => {
     try {
-        // Insert image into 'images' table and get back the inserted image ID
         const imageId = await queries.insertImage(req.file.buffer);
-        // Combine form fields and the image ID
         const recipeData = {
             recipe_name: req.body.recipe_name,
             recipe_desc: req.body.recipe_desc,
             recipe_method: req.body.recipe_method,
-            recipe_ingredients: req.body.recipe_ingredients, // Assuming JSON string
+            recipe_ingredients: req.body.recipe_ingredients,
             users_user_id: req.body.users_user_id,
-            recipe_image_id: imageId, // Use the returned image ID
+            recipe_image_id: imageId,
         };
-
-        // Insert recipe data into database
         await queries.insertRecipe(recipeData);
-
         res.status(200).json({ message: "Recipe uploaded successfully" });
     } catch (error) {
         console.error('Error uploading recipe:', error);
@@ -82,6 +75,58 @@ apiRouter.post('/uploadRecipe', upload.single('recipe_image'), async (req, res) 
     }
 });
 
+apiRouter.post('/editRecipe', upload.single('recipe_image'), async (req, res) => {
+    try {
+        let imageId = req.body.image_id;
+        if (req.file) {
+            imageId = await queries.updateImage(req.file.buffer, imageId);
+        }
+        const recipeData = {
+            recipe_id: req.body.recipe_id,
+            recipe_name: req.body.recipe_name,
+            recipe_desc: req.body.recipe_desc,
+            recipe_method: req.body.recipe_method,
+            recipe_ingredients: req.body.recipe_ingredients,
+            users_user_id: req.body.users_user_id,
+            recipe_image_id: imageId,
+        };
+        await queries.updateRecipe(recipeData);
+        res.status(200).json({ message: "Recipe updated successfully" });
+    } catch (error) {
+        console.error('Error editing recipe:', error);
+        res.status(500).json({ message: "Error editing recipe" });
+    }
+});
+
+apiRouter.get('/recipes/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { page = 1, limit = 10 } = req.query; // Default: page 1, limit 10 items
+    console.log('UserID Backend : ', userId)
+    try {
+        const recipes = await queries.getUserRecipes(userId, page, limit);
+        res.json(recipes);
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).json({ message: "Error fetching recipes" });
+    }
+});
+
+apiRouter.get('/image/:imageId', async (req, res) => {
+    console.log('qpi')
+    const { imageId } = req.params;
+    try {
+        const imageData = await queries.fetchImageData(imageId);
+        if (imageData) {
+            const base64Image = Buffer.from(imageData, 'binary').toString('base64');
+            res.send(base64Image);
+        } else {
+            res.status(404).send('Image not found');
+        }
+    } catch (error) {
+        console.error('Error fetching image:', error);
+        res.status(500).json({ message: "Error fetching image" });
+    }
+});
 
 
 

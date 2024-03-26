@@ -3,7 +3,7 @@ import Header from "../components/header";
 import styled from "styled-components";
 import DayCard from "../components/day-card";
 import WeekNavigator from "../components/week-navigator";
-import RecipeLibrary from "../components/recipe-library";
+import RecipeLibrary from "../components/recipe-library/recipe-library";
 import ShoppingList from "../components/shopping-list";
 import RecipeEditor from "../components/recipe-editor/recipe-editor";
 
@@ -15,8 +15,6 @@ const RecipeListContainer = styled.div`
     margin: 10px 15px;
     display: flex;
     justify-content: space-between;
-
-
 `
 
 const HomePage = (): JSX.Element => {

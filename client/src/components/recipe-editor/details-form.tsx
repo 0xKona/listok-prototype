@@ -52,8 +52,8 @@ const VisuallyHiddenInput = styled.input`
 
 const DeleteImage = styled.div`
     position: absolute;
-    top: 10px; // Adjust as needed
-    right: 10px; // Adjust as needed
+    top: 10px;
+    right: 10px;
     background-color: white;
     border-radius: 100%;
 `;
