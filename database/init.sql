@@ -29,6 +29,15 @@ CREATE TABLE IF NOT EXISTS `listok_db`.`users` (
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `listok_db`.`images`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `listok_db`.`images` (
+  `image_id` INT NOT NULL AUTO_INCREMENT,
+  `image_data` LONGBLOB NULL,
+  PRIMARY KEY (`image_id`),
+  UNIQUE INDEX `image_id_UNIQUE` (`image_id` ASC) VISIBLE)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `listok_db`.`recipes`
@@ -38,16 +47,22 @@ CREATE TABLE IF NOT EXISTS `listok_db`.`recipes` (
   `recipe_name` VARCHAR(100) NULL,
   `recipe_desc` MEDIUMTEXT NULL,
   `recipe_method` MEDIUMTEXT NULL,
-  `recipe_image` LONGBLOB NULL,
+  `recipe_image_id` INT NULL,
   `recipe_ingredients` MEDIUMTEXT NULL,
   `users_user_id` INT NOT NULL,
   PRIMARY KEY (`recipe_id`, `users_user_id`),
   UNIQUE INDEX `recipe_id_UNIQUE` (`recipe_id` ASC) VISIBLE,
   INDEX `fk_recipes_users_idx` (`users_user_id` ASC) VISIBLE,
+  INDEX `fk_recipes_images_idx` (`recipe_image_id` ASC) VISIBLE,
   CONSTRAINT `fk_recipes_users`
     FOREIGN KEY (`users_user_id`)
     REFERENCES `listok_db`.`users` (`user_id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_recipes_images`
+    FOREIGN KEY (`recipe_image_id`)
+    REFERENCES `listok_db`.`images` (`image_id`)
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

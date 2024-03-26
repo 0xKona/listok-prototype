@@ -8,7 +8,7 @@ import IngredientEditor from "./ingredient-editor";
 const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 500px;
     max-width: 100%;
     height: 80%;
     flex-grow: 1;
@@ -36,7 +36,7 @@ interface IngredientInterface {
     quantity: string
 }
 
-const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo, uploadRecipe}: any) => {
+const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo, uploadRecipe, setShowRecipeEditor}: any) => {
     const [ingredientsArray, setIngredientsArray] = useState<any>(recipeInfo.recipe_ingredients);
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
           }));
     }, [ingredientsArray])
     
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         const updatedSteps = steps.map((step: Step) => {
             if (step.label === 'Ingredients') {
                 return { ...step, complete: true }; // Update the 'Details' step to be complete
@@ -54,14 +54,15 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
             return step;
         });
         setSteps(updatedSteps); // Update the steps state
-        uploadRecipe(recipeInfo);
+        await uploadRecipe(recipeInfo);
+        //TODO : Loading effect when uploading
+        setShowRecipeEditor(false);
+        
     }
 
     const handleBack = () => {
         setCurrentStep({label: 'Method', value: 1, complete: false});
-
-        // Update steps to mark 'Details' as complete
-        const updatedSteps = steps.map((step: Step) => {
+        const updatedSteps = steps.map((step: Step) => { // Update steps to mark 'Details' as complete
             if (step.label === 'Ingredients') {
                 return { ...step, complete: false }; // Update the 'Details' step to be complete
             }

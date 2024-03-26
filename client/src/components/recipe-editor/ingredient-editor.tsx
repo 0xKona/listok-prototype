@@ -10,7 +10,7 @@ const Container = styled.div`
 `;
 
 const DeleteButton = styled.div`
-    height: 100%;
+    height: 56px;
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;

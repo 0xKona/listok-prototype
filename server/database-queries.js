@@ -40,12 +40,24 @@ queries.checkIfUserExists = async (google_id) => {
     });
 };
 
+queries.insertImage = async (imageData) => {
+    const query = `INSERT INTO images (image_data) VALUES (?);`;
+    const [result] = await pool.execute(query, [imageData]);
+    return result.insertId;
+};
+
+queries.updateImage = async (imageData, imageId) => {
+    const updateQuery = `UPDATE images SET image_data = ? WHERE image_id = ?;`;
+    await pool.execute(updateQuery, [imageData, imageId]);
+    return imageId;
+};
+
 queries.insertRecipe = async (recipeData) => {
-    const { recipe_name, recipe_desc, recipe_method, recipe_ingredients, users_user_id, recipe_image } = recipeData;
+    const { recipe_name, recipe_desc, recipe_method, recipe_ingredients, users_user_id, recipe_image_id } = recipeData;
 
     const query = `
-        INSERT INTO listok_db.recipes (
-            recipe_name, recipe_desc, recipe_method, recipe_image, 
+        INSERT INTO recipes (
+            recipe_name, recipe_desc, recipe_method, recipe_image_id, 
             recipe_ingredients, users_user_id
         ) VALUES (?, ?, ?, ?, ?, ?);
     `;
@@ -54,9 +66,28 @@ queries.insertRecipe = async (recipeData) => {
         recipe_name,
         recipe_desc,
         recipe_method,
-        recipe_image, // Directly use the buffer from multer's memory storage
+        recipe_image_id,
         recipe_ingredients,
         users_user_id,
+    ]);
+};
+
+queries.updateRecipe = async (recipeData) => {
+    const { recipe_id, recipe_name, recipe_desc, recipe_method, recipe_ingredients, users_user_id, recipe_image_id } = recipeData;
+
+    const updateQuery = `
+        UPDATE recipes
+        SET recipe_name = ?, recipe_desc = ?, recipe_method = ?, recipe_image_id = ?, recipe_ingredients = ?, users_user_id = ?
+        WHERE recipe_id = ?;
+    `;
+    await pool.execute(updateQuery, [
+        recipe_name,
+        recipe_desc,
+        recipe_method,
+        recipe_image_id,
+        recipe_ingredients,
+        users_user_id,
+        recipe_id,
     ]);
 };
 

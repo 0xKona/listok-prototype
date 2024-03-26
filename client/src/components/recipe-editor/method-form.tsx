@@ -52,6 +52,7 @@ const MethodForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo}
     const handleBack = () => {
         setRecipeInfo({...recipeInfo, recipe_method: methodText});
         setCurrentStep({label: 'Details', value: 0, complete: false});
+        
 
         // Update steps to mark 'Details' as not complete
         const updatedSteps = steps.map((step: Step) => {
@@ -72,7 +73,7 @@ const MethodForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo}
                     label="Recipe Method (Optional)"
                     multiline
                     placeholder="Recipe Description"
-                    rows={18}
+                    rows={16}
                     defaultValue={methodText}
                     onChange={(e) => setMethodText(e.target.value)}
                 />
