@@ -8,6 +8,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { UserContext } from "../../context/user.context";
 import RecipeCard from "./recipe-card";
+import { Draggable, Droppable } from 'react-beautiful-dnd' 
 
 // TODO Known bug: if recipe libray width is longer than total amount of recipes 
 // then user cannot scroll and is unable to load more
@@ -64,40 +65,61 @@ const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
         fetchRecipes();
     };
 
+
     return (
         <Container>
             <Header>
                 <p>Recipe Library</p>
                 <Button variant="outlined" onClick={() => setShowRecipeEditor(true)}>New Recipe</Button>
             </Header>
-            <RecipeListContainer id="RecipeListContainer">
-                <InfiniteScroll
-                    style={{ 
-                        display: 'flex', 
-                        flexWrap: 'wrap', 
-                        gap: '10px', 
-                        justifyContent: 'flex-start',
-                        padding: '10px'
-                    }}
-                    scrollableTarget="RecipeListContainer"
-                    dataLength={recipes.length}
-                    next={fetchMoreRecipes}
-                    hasMore={hasMore}
-                    loader={<h4>Loading...</h4>}
-                    endMessage={
-                        <p style={{ textAlign: 'center' }}>
-                            <b>You have seen all recipes</b>
-                        </p>
-                    }
-                >
-                    {recipes.map((recipe: any) => (
-                        <RecipeCard key={recipe.recipe_id} recipe={recipe}/>
-                    ))}
-                </InfiniteScroll>    
-            </RecipeListContainer>
-            
+            <Droppable droppableId="recipeListDroppable" isDropDisabled={true}>
+                {(provided, snapshot) => (
+                    <RecipeListContainer
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        id="RecipeListContainer"
+                    >
+                        <InfiniteScroll
+                            style={{ 
+                                display: 'flex', 
+                                flexWrap: 'wrap', 
+                                gap: '10px', 
+                                justifyContent: 'flex-start',
+                                padding: '10px'
+                            }}
+                            scrollableTarget="RecipeListContainer"
+                            dataLength={recipes.length}
+                            next={fetchMoreRecipes}
+                            hasMore={hasMore}
+                            loader={<h4>Loading...</h4>}
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                    <b>You have seen all recipes</b>
+                                </p>
+                            }
+                        >
+                            {recipes.map((recipe: any, index: number) => (
+                                <Draggable key={recipe.recipe_id} draggableId={`${recipe.recipe_id}`} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            style={{...provided.draggableProps.style}}
+                                        >
+                                            {/* Your RecipeCard component */}
+                                            <RecipeCard key={recipe.recipe_id} recipe={recipe} />
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </InfiniteScroll>
+                    </RecipeListContainer>
+                )}
+            </Droppable>
         </Container>
-    )
+    );
 }
 
 export default RecipeLibrary

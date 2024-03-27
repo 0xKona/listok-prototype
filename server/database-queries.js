@@ -105,6 +105,20 @@ queries.getUserRecipes = async (userId, page, limit) => {
     return recipes;
 };
 
+queries.getRecipeById = async (recipeId) => {
+    const query = `
+        SELECT * FROM recipes
+        WHERE recipe_id = ?;
+    `;
+    try {
+        const [recipes] = await pool.query(query, [recipeId]);
+        return recipes[0];
+    } catch (error) {
+        console.error('Error fetching recipe by ID:', error);
+        throw error;
+    }
+};
+
 queries.fetchImageData = async (imageId) => {
     const query = `SELECT image_data FROM images WHERE image_id = ?`;
     try {
@@ -117,6 +131,50 @@ queries.fetchImageData = async (imageId) => {
         console.error('Error fetching image data:', error);
     }
 };
+
+queries.fetchOrCreateWeekData = async (weekStart, userId) => {
+    const selectQuery = `SELECT * FROM weeks WHERE week_start = ? AND users_user_id = ?`;
+
+    try {
+        const [rows] = await pool.execute(selectQuery, [weekStart, userId]);
+        if (rows.length > 0) {
+            return rows[0]; // Week data exists
+        } else {
+            // Insert new week data if not exists
+            const insertQuery = `INSERT INTO weeks (week_start, users_user_id) VALUES (?, ?)`;
+            await pool.execute(insertQuery, [weekStart, userId]);
+
+            // Fetch and return the newly created week data
+            const [newRows] = await pool.execute(selectQuery, [weekStart, userId]);
+            return newRows[0];
+        }
+    } catch (error) {
+        console.error('Error fetching or creating week data:', error);
+        throw error; // Re-throw the error to be handled by the calling function
+    }
+};
+
+queries.updateWeekData = async (weekId, weekData) => {
+    const updateQuery = `UPDATE weeks SET mon = ?, tue = ?, wed = ?, thur = ?, fri = ?, sat = ?, sun = ? WHERE week_id = ?`;
+    const values = [
+        weekData.dayData.mon,
+        weekData.dayData.tue,
+        weekData.dayData.wed,
+        weekData.dayData.thur,
+        weekData.dayData.fri,
+        weekData.dayData.sat,
+        weekData.dayData.sun,
+        weekId,
+    ];
+
+    try {
+        await pool.execute(updateQuery, values);
+    } catch (error) {
+        console.error('Error updating week data:', error);
+        throw error;
+    }
+};
+
 
 
 export default queries;

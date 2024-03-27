@@ -71,7 +71,7 @@ ENGINE = InnoDB;
 -- Table `listok_db`.`weeks`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `listok_db`.`weeks` (
-  `week_id` INT NOT NULL,
+  `week_id` INT NOT NULL AUTO_INCREMENT,
   `week_start` VARCHAR(45) NULL,
   `users_user_id` INT NOT NULL,
   `mon` INT NULL,

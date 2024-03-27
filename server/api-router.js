@@ -110,6 +110,21 @@ apiRouter.get('/recipes/:userId', async (req, res) => {
     }
 });
 
+apiRouter.get('/recipe/:recipeId', async (req, res) => {
+    const { recipeId } = req.params;
+    try {
+        const recipe = await queries.getRecipeById(recipeId);
+        if (recipe) {
+            res.json(recipe);
+        } else {
+            res.status(404).json({ message: "Recipe not found" });
+        }
+    } catch (error) {
+        console.error('Error fetching recipe:', error);
+        res.status(500).json({ message: "Error fetching recipe" });
+    }
+});
+
 apiRouter.get('/image/:imageId', async (req, res) => {
     const { imageId } = req.params;
     try {
@@ -125,6 +140,31 @@ apiRouter.get('/image/:imageId', async (req, res) => {
         res.status(500).json({ message: "Error fetching image" });
     }
 });
+
+apiRouter.get('/weeks/:weekStart/:userId', async (req, res) => {
+    const { weekStart, userId } = req.params;
+    try {
+        const weekData = await queries.fetchOrCreateWeekData(weekStart, userId);
+        res.json(weekData);
+    } catch (error) {
+        console.error('Error handling week data:', error);
+        res.status(500).json({ message: "Error processing week data" });
+    }
+});
+
+apiRouter.post('/updateWeek/', async (req, res) => {
+    console.log('triggered')
+    const weekData = req.body; // Assuming the updated week data is in the request body
+
+    try {
+        await queries.updateWeekData(weekData.week_id, weekData);
+        res.json({ message: "Week updated successfully" });
+    } catch (error) {
+        console.error('Error updating week:', error);
+        res.status(500).json({ message: "Error updating week" });
+    }
+});
+
 
 
 

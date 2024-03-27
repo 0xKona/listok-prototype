@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Header from "../components/header";
 import styled from "styled-components";
 import DayCard from "../components/day-card";
@@ -6,6 +6,8 @@ import WeekNavigator from "../components/week-navigator";
 import RecipeLibrary from "../components/recipe-library/recipe-library";
 import ShoppingList from "../components/shopping-list";
 import RecipeEditor from "../components/recipe-editor/recipe-editor";
+import { WeekContext } from "../context/week-context";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const Testdaycontainer = styled.div`
     display:flex;
@@ -18,12 +20,40 @@ const RecipeListContainer = styled.div`
 `
 
 const HomePage = (): JSX.Element => {
+    const { weekData, setWeekData } = useContext(WeekContext)
     const [showRecipeEditor, setShowRecipeEditor] = useState(false);
+    console.log('Week Data :: ', weekData)
+    
+    const onDragEnd = async(result: any) => {
 
-    const days = ['mon', 'tue', 'wed', 'thurs', 'fri', 'sat', 'sun']
+        const { destination, source, draggableId } = result;
+
+        if (!destination) return;
+
+        const newData = {...weekData}
+        newData.dayData[destination.droppableId] = Number(draggableId)
+
+        try {
+            const response = await fetch(`/api/updateWeek`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newData),
+            });
+    
+            if (response.ok) {
+                setWeekData(newData)
+            } else {
+                console.error('Failed to update week');
+            }
+        } catch (error) {
+            console.error('Error updating week:', error);
+        }
+    }
 
     return (
-        <>
+        <DragDropContext onDragEnd={onDragEnd}>
             <Header />
             {showRecipeEditor ?
                 <RecipeEditor setShowRecipeEditor={setShowRecipeEditor}/>
@@ -32,7 +62,7 @@ const HomePage = (): JSX.Element => {
                     <WeekNavigator />
                     <Testdaycontainer>
                     {
-                        days.map(weekday =>(
+                        Object.keys(weekData.dayData).map((weekday: any) =>(
                             <DayCard key={weekday} day={weekday}/>
                         ))
                     }
@@ -43,7 +73,7 @@ const HomePage = (): JSX.Element => {
                     </RecipeListContainer>
                 </>
             }
-        </>
+        </DragDropContext>
     )
 
 }
