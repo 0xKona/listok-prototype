@@ -9,6 +9,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { UserContext } from "../../context/user.context";
 import RecipeCard from "./recipe-card";
 
+// TODO Known bug: if recipe libray width is longer than total amount of recipes 
+// then user cannot scroll and is unable to load more
+
 const Container = styled.div`
     width: 100%;
     height: 400px;
@@ -36,7 +39,7 @@ const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
     const [recipes, setRecipes] = useState<any>([]);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1);
-    const limit = 6; // Number of recipes to load per page
+    const limit = 10; // Number of recipes to load per page
 
     const {userObj} = useContext(UserContext)
     console.log(userObj)
@@ -73,7 +76,7 @@ const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
                         display: 'flex', 
                         flexWrap: 'wrap', 
                         gap: '10px', 
-                        justifyContent: 'space-between',
+                        justifyContent: 'flex-start',
                         padding: '10px'
                     }}
                     scrollableTarget="RecipeListContainer"

@@ -101,7 +101,6 @@ apiRouter.post('/editRecipe', upload.single('recipe_image'), async (req, res) =>
 apiRouter.get('/recipes/:userId', async (req, res) => {
     const { userId } = req.params;
     const { page = 1, limit = 10 } = req.query; // Default: page 1, limit 10 items
-    console.log('UserID Backend : ', userId)
     try {
         const recipes = await queries.getUserRecipes(userId, page, limit);
         res.json(recipes);
@@ -112,7 +111,6 @@ apiRouter.get('/recipes/:userId', async (req, res) => {
 });
 
 apiRouter.get('/image/:imageId', async (req, res) => {
-    console.log('qpi')
     const { imageId } = req.params;
     try {
         const imageData = await queries.fetchImageData(imageId);

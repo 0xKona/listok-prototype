@@ -92,8 +92,7 @@ queries.updateRecipe = async (recipeData) => {
 };
 
 queries.getUserRecipes = async (userId, page, limit) => {
-    // Convert page and limit to numbers to ensure proper query execution
-    const pageNumber = Number(page);
+    const pageNumber = Number(page); //Not converting to a number causes SQL Error ¯\_(ツ)_/¯
     const limitNumber = Number(limit);
     const offset = (pageNumber - 1) * limitNumber;
 
@@ -102,8 +101,6 @@ queries.getUserRecipes = async (userId, page, limit) => {
         WHERE users_user_id = ?
         LIMIT ? OFFSET ?;
     `;
-
-    // Ensure that the variables passed to pool.execute are of the correct type
     const [recipes] = await pool.query(query, [userId, limitNumber, offset]);
     return recipes;
 };
@@ -113,13 +110,11 @@ queries.fetchImageData = async (imageId) => {
     try {
         const [rows] = await pool.execute(query, [imageId]);
         if (rows.length > 0) {
-            // Assuming image_data is stored as a blob, which is returned as a Buffer
             return rows[0].image_data;
         }
-        return null; // Return null if no image is found
+        return null;
     } catch (error) {
         console.error('Error fetching image data:', error);
-        throw error; // Rethrow or handle as appropriate for your application
     }
 };
 

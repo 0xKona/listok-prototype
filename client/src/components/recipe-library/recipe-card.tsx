@@ -38,6 +38,9 @@ const RecipeTitleWrapper = styled.div`
     -webkit-backdrop-filter: blur(8.4px);
     text-align: center;
 `
+const ButtonArea = styled.div`
+    
+`
 
 interface RecipeCardProps {
     recipe: {
@@ -72,6 +75,9 @@ const RecipeCard = ({ recipe }: any): JSX.Element => {
                 <RecipeTitleWrapper>
                     <p>{recipe.recipe_name}</p>
                 </RecipeTitleWrapper>
+                <ButtonArea>
+
+                </ButtonArea>
             </ImageArea>
         </Container>
     );
