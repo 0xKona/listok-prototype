@@ -31,6 +31,24 @@ const DayCard = ({ day }: { day: string }): JSX.Element => {
         }
     };
 
+    const resetRecipe = async() => {
+        console.log('reset trigger')
+        const newData = {...weekData}
+        newData.dayData[day] = null;
+        console.log('WEEK RESET:', weekData)
+        console.log('NEW RESET: ', newData)
+        try {
+            const response = await axios.post('/api/updateWeek', newData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            setWeekData(newData)
+        } catch (error) {
+            console.error('Error updating week:', error);
+        }
+    }
+
     useEffect(() => {
         if (weekData.dayData[day]) {
             console.log('useEffect triggered')
@@ -39,7 +57,7 @@ const DayCard = ({ day }: { day: string }): JSX.Element => {
             setRecipe(null)
         }
     }, [weekData.dayData[day], weekData.week_id])
-    console.log(day, recipe)
+
     return (
         <Droppable droppableId={day}>
             {(provided, snapshot) => (
@@ -52,6 +70,10 @@ const DayCard = ({ day }: { day: string }): JSX.Element => {
                     <p>{`Recipe: ${recipe && recipe.recipe_name}`}</p>
                     {/* This is where the dropped items will be shown */}
                     {provided.placeholder}
+
+                    <div>
+                        <button onClick={resetRecipe}>{`Remove recipe from ${day}`}</button>
+                    </div>
                 </CardContainer>
             )}
         </Droppable>

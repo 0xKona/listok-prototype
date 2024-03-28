@@ -16,11 +16,11 @@ const Container = styled.div`
 `
 const Week = styled.p`
 `
-//TODO WeekNavigator is broke, sometimes only goes forward/back 6/8 days and causes mayhem
+
 const WeekNavigator = (): JSX.Element => {
 
     const { weekData, setWeekData } = useContext(WeekContext)
-    console.log(weekData)
+
     const changeWeek = (forward: boolean) => {
         // Convert weekData.week_start string to a Date object first
         const currentWeekStart = new Date(weekData.week_start);
@@ -42,7 +42,6 @@ const WeekNavigator = (): JSX.Element => {
         }));
     };
     
-
     return (
         <Container>
             <FaArrowLeft onClick={() => changeWeek(false)}/>
