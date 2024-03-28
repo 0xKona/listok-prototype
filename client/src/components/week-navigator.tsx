@@ -24,9 +24,13 @@ const WeekNavigator = (): JSX.Element => {
     const changeWeek = (forward: boolean) => {
         // Convert weekData.week_start string to a Date object first
         const currentWeekStart = new Date(weekData.week_start);
-        
-        // Calculate the new week start date
-        const newWeekStart = new Date(currentWeekStart.setDate(currentWeekStart.getDate() + (forward ? 7 : -7)));
+    
+        // Calculate the timestamp for the new week start date
+        // Note: 7 days * 24 hours/day * 60 minutes/hour * 60 seconds/minute * 1000 milliseconds/second
+        const newWeekStartTimestamp = currentWeekStart.getTime() + (forward ? 7 : -7) * 24 * 60 * 60 * 1000;
+    
+        // Convert the timestamp back to a Date object
+        const newWeekStart = new Date(newWeekStartTimestamp);
     
         // Format the newWeekStart date back to a string in YYYY-MM-DD format
         const newWeekStartStr = newWeekStart.toISOString().split('T')[0];
