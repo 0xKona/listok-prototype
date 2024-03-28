@@ -21,7 +21,7 @@ const RecipeListContainer = styled.div`
 
 const HomePage = (): JSX.Element => {
     const { weekData, setWeekData } = useContext(WeekContext)
-    const [showRecipeEditor, setShowRecipeEditor] = useState(false);
+    const [showRecipeEditor, setShowRecipeEditor] = useState<any>({open: false, recipeId: null});
     console.log('Week Data :: ', weekData)
     
     const onDragEnd = async(result: any) => {
@@ -55,8 +55,8 @@ const HomePage = (): JSX.Element => {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Header />
-            {showRecipeEditor ?
-                <RecipeEditor setShowRecipeEditor={setShowRecipeEditor}/>
+            {showRecipeEditor.open ?
+                <RecipeEditor recipeId={showRecipeEditor.recipeId} setShowRecipeEditor={setShowRecipeEditor}/>
             :
                 <>
                     <WeekNavigator />

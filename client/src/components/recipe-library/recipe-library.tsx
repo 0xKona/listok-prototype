@@ -36,7 +36,7 @@ const RecipeListContainer = styled.div`
 `;
 
 //TODO : types
-const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
+const RecipeLibrary = ({ showRecipeEditor, setShowRecipeEditor }: any): JSX.Element => {
     const [recipes, setRecipes] = useState<any>([]);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1);
@@ -70,7 +70,7 @@ const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
         <Container>
             <Header>
                 <p>Recipe Library</p>
-                <Button variant="outlined" onClick={() => setShowRecipeEditor(true)}>New Recipe</Button>
+                <Button variant="outlined" onClick={() => setShowRecipeEditor({open: true, recipeId: null})}>New Recipe</Button>
             </Header>
             <Droppable droppableId="recipeListDroppable" isDropDisabled={true}>
                 {(provided, snapshot) => (
@@ -108,7 +108,7 @@ const RecipeLibrary = ({ setShowRecipeEditor }: any): JSX.Element => {
                                             style={{...provided.draggableProps.style}}
                                         >
                                             {/* Your RecipeCard component */}
-                                            <RecipeCard key={recipe.recipe_id} recipe={recipe} />
+                                            <RecipeCard key={recipe.recipe_id} recipe={recipe} setShowRecipeEditor={setShowRecipeEditor}/>
                                         </div>
                                     )}
                                 </Draggable>

@@ -153,7 +153,6 @@ apiRouter.get('/weeks/:weekStart/:userId', async (req, res) => {
 });
 
 apiRouter.post('/updateWeek/', async (req, res) => {
-    console.log('triggered')
     const weekData = req.body; // Assuming the updated week data is in the request body
 
     try {

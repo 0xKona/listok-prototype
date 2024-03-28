@@ -50,7 +50,7 @@ interface RecipeCardProps {
     };
 }
 
-const RecipeCard = ({ recipe }: any): JSX.Element => {
+const RecipeCard = ({ recipe, setShowRecipeEditor }: any): JSX.Element => {
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
     useEffect(() => {
@@ -76,7 +76,7 @@ const RecipeCard = ({ recipe }: any): JSX.Element => {
                     <p>{recipe.recipe_name}</p>
                 </RecipeTitleWrapper>
                 <ButtonArea>
-
+                    <button onClick={() => setShowRecipeEditor({open: true, recipeId: recipe.recipe_id})}>Edit</button>
                 </ButtonArea>
             </ImageArea>
         </Container>

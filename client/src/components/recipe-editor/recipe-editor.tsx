@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import StepTracker from "./step-tracker";
@@ -6,6 +6,7 @@ import DetailsForm from "./details-form";
 import { UserContext } from "../../context/user.context";
 import MethodForm from "./method-form";
 import IngredientsForm from "./ingredients-form";
+import axios from "axios";
 
 //TODO Styling issues on smaller screen sizes
 //TODO Replace any types
@@ -67,8 +68,8 @@ const CurrentTabTitle = styled.h1`
 `
 
 interface props {
-    setShowRecipeEditor: React.Dispatch<React.SetStateAction<boolean>>;
-    recipeId?: number
+    recipeId: null| number
+    setShowRecipeEditor: React.Dispatch<React.SetStateAction<any>>;
 }
 
 interface RecipeInfo {
@@ -81,13 +82,15 @@ interface RecipeInfo {
     users_user_id: string;
 }
 
-const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
+const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
+    console.log('***RECIPE EDITOR ID::', recipeId)
     const {userObj} = useContext(UserContext)
     const [steps, setSteps] = useState([
         {label: 'Details', value: 0, complete: false}, 
         {label: 'Method', value: 1, complete: false}, 
         {label: 'Ingredients', value: 2, complete: false}
     ]);
+    const [recipeData, setRecipeData] = useState(null)
     
     const [currentStep, setCurrentStep] = useState<any>({label: "Details", value: 0});
     const [recipeInfo, setRecipeInfo] = useState<RecipeInfo>({
@@ -98,6 +101,21 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
         recipe_ingredients: [{ingredientName: '', quantity: ''}],
         users_user_id: userObj.userInfo.listokId
     })
+
+    const fetchRecipeById = async () => {
+        try {
+            const response = await axios.get(`/api/recipe/${recipeId}`);
+            setRecipeData(response.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        if (recipeId) {
+            fetchRecipeById()
+        }
+    }, [])
 
     const uploadRecipe = async(recipe: any) => {
         try {
@@ -129,7 +147,7 @@ const RecipeEditor = ({setShowRecipeEditor, recipeId}: props) => {
     return(
         <Wrapper>
             <RecipeEditorContainer>
-                <CloseButton onClick={() => setShowRecipeEditor(false)}>
+                <CloseButton onClick={() => setShowRecipeEditor({open: false, recipeId: null})}>
                     <AiOutlineClose color="black" size={30}/>
                 </CloseButton>
                 <StepTracker steps={steps} currentStep={currentStep} setCurrentStep={setCurrentStep} />

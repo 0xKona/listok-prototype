@@ -56,8 +56,7 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
         setSteps(updatedSteps); // Update the steps state
         await uploadRecipe(recipeInfo);
         //TODO : Loading effect when uploading
-        setShowRecipeEditor(false);
-        
+        setShowRecipeEditor({open: false, recipeId: null});
     }
 
     const handleBack = () => {
