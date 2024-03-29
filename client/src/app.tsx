@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import GlobalStyle from "./styles/global";
 import HomePage from "./pages/home";
 import { gapi } from "gapi-script";
-import { UserContext } from "./context/user.context";
+import { UserContext } from "./context/user-context";
 import { LoginPage } from "./pages/login-page";
 
 const App = () => {

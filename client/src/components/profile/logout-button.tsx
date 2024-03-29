@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { GoogleLogout } from 'react-google-login';
-import { UserContext } from '../../context/user.context';
+import { UserContext } from '../../context/user-context';
 import styled from 'styled-components';
 
 const SignOutBtnWrapper = styled.div`

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { weekDataInterface } from '../types';
-import { UserContext } from './user.context';
+import { UserContext } from './user-context';
 
 interface WeekContextInterface {
     weekData: any;

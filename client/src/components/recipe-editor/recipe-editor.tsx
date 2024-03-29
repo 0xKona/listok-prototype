@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import StepTracker from "./step-tracker";
 import DetailsForm from "./details-form";
-import { UserContext } from "../../context/user.context";
+import { UserContext } from "../../context/user-context";
 import MethodForm from "./method-form";
 import IngredientsForm from "./ingredients-form";
 import axios from "axios";

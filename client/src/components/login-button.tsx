@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import GoogleLogin from 'react-google-login';
-import { UserContext } from '../context/user.context';
+import { UserContext } from '../context/user-context';
 
 export const LoginButton = () => {
 

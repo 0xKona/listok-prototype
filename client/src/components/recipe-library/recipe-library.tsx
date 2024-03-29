@@ -6,7 +6,7 @@ import { StyleProps } from "../../types";
 import { Button } from "@mui/material";
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { UserContext } from "../../context/user.context";
+import { UserContext } from "../../context/user-context";
 import RecipeCard from "./recipe-card";
 import { Draggable, Droppable } from 'react-beautiful-dnd' 
 

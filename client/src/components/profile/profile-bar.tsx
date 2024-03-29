@@ -4,7 +4,7 @@ import { StyleProps } from "../../types";
 import { ThemeContext } from "../../context/theme-context";
 import { themesObject } from "../../context/themes";
 import { LogoutButton } from "./logout-button";
-import { UserContext } from "../../context/user.context";
+import { UserContext } from "../../context/user-context";
 import ProfileMenu from "./profile-dropdown";
 import useOutsideClick from "../../utils/useOutsideClick";
 
