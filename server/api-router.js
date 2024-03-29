@@ -17,43 +17,34 @@ const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID)
 const apiRouter = express.Router();
 
 apiRouter.post('/login', async (req, res) => {
-    
     const { token } = req.body;
 
     try {
-        // Verify the ID token asynchronously
         const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.GOOGLE_OAUTH_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            idToken: token,
+            audience: process.env.GOOGLE_OAUTH_CLIENT_ID,
         });
         
         const payload = ticket.getPayload();
-        const googleId = payload.sub
+        const googleId = payload.sub;
 
-        const checkExistingUser = async() => {
-            const response = await queries.checkIfUserExists(googleId);
-    
-            if (response && response[0].length > 0) {
-                return response[0]
-            } else {
-                await queries.createNewUser(
-                    payload.sub,
-                    payload.email,
-                    payload.name
-                )
-                const user = await queries.checkIfUserExists(googleId)
-                return user[0]
-            }
+        // Combine user check and creation logic for efficiency
+        let user = await queries.checkIfUserExists(googleId);
+        if (user.length === 0) {
+            await queries.createNewUser(payload.sub, payload.email, payload.name);
+            user = await queries.checkIfUserExists(googleId);
         }
-    
-        const result = await checkExistingUser()
-    
-        res.status(200).send({listokId: result[0].user_id});
-    
-      } catch (error) {
-        console.error("Error verifying Google token:", error);
+
+        // Assuming checkIfUserExists always returns an array with user objects
+        if (user.length > 0) {
+            res.status(200).json({listokId: user[0].user_id});
+        } else {
+            throw new Error('User not found after creation attempt');
+        }
+    } catch (error) {
+        console.error("Error verifying Google token or handling user data:", error);
         res.status(401).json({ message: "Unauthorized" });
-      }
+    }
 });
 
 apiRouter.post('/uploadRecipe', upload.single('recipe_image'), async (req, res) => {
