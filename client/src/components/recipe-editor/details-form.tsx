@@ -75,7 +75,33 @@ const DetailsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo
         if (recipeName) {
             validateRecipeName(recipeName)
         }
-    }, [])
+    }, [recipeName])
+
+    useEffect(() => {
+        if (recipeInfo.recipe_image_id) {
+            const fetchImage = async () => {
+                try {
+                    const response = await fetch(`/api/image/${recipeInfo.recipe_image_id}`);
+                    const base64Image = await response.text();
+                    setRecipeImage(`data:image/jpeg;base64,${base64Image}`);
+                } catch (error) {
+                    console.error("Error fetching image:", error);
+                }
+            };
+    
+            if (recipeInfo.recipe_image_id) {
+                fetchImage();
+            }
+        }
+    }, [recipeInfo.recipe_image_id])
+
+    useEffect(() => {
+        setRecipeName(recipeInfo.recipe_name)
+    }, [recipeInfo.recipe_name])
+
+    useEffect(() => {
+        setRecipeDescription(recipeInfo.recipe_desc)
+    }, [recipeInfo.recipe_desc])
 
     const validateRecipeName = (input: string): void => {
         const errors: string[] = [];
@@ -167,7 +193,7 @@ const DetailsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo
                     multiline
                     rows={4}
                     placeholder="Recipe Description"
-                    defaultValue={recipeDescription}
+                    value={recipeDescription}
                     onChange={(e) => setRecipeDescription(e.target.value)}
                 />
                 <ImageDropBox

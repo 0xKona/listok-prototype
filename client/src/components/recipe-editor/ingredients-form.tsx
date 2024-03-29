@@ -80,7 +80,7 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
             <Button onClick={addNewIngredient}>Add New</Button>
             <FormContainer>
                 {ingredientsArray.map((ingredient: IngredientInterface, index: number) => (
-                    <IngredientEditor ingredientsArray={ingredientsArray} setIngredientsArray={setIngredientsArray} ingredientData={ingredient} ingredientIndex={index}/>
+                    <IngredientEditor key={index} ingredientsArray={ingredientsArray} setIngredientsArray={setIngredientsArray} ingredientData={ingredient} ingredientIndex={index}/>
                 ))}
             </FormContainer>
             <NavBtnContainer>

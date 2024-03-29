@@ -32,11 +32,9 @@ const DayCard = ({ day }: { day: string }): JSX.Element => {
     };
 
     const resetRecipe = async() => {
-        console.log('reset trigger')
         const newData = {...weekData}
         newData.dayData[day] = null;
-        console.log('WEEK RESET:', weekData)
-        console.log('NEW RESET: ', newData)
+        
         try {
             const response = await axios.post('/api/updateWeek', newData, {
                 headers: {
@@ -51,7 +49,6 @@ const DayCard = ({ day }: { day: string }): JSX.Element => {
 
     useEffect(() => {
         if (weekData.dayData[day]) {
-            console.log('useEffect triggered')
             fetchRecipeById();
         } else {
             setRecipe(null)

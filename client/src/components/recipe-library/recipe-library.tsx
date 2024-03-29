@@ -43,7 +43,7 @@ const RecipeLibrary = ({ showRecipeEditor, setShowRecipeEditor }: any): JSX.Elem
     const limit = 10; // Number of recipes to load per page
 
     const {userObj} = useContext(UserContext)
-    console.log(userObj)
+    
     useEffect(() => {
         fetchRecipes();
     }, [userObj.userInfo.listokId, page]); // Fetch recipes when userId changes

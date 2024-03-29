@@ -83,29 +83,27 @@ interface RecipeInfo {
 }
 
 const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
-    console.log('***RECIPE EDITOR ID::', recipeId)
     const {userObj} = useContext(UserContext)
     const [steps, setSteps] = useState([
         {label: 'Details', value: 0, complete: false}, 
         {label: 'Method', value: 1, complete: false}, 
         {label: 'Ingredients', value: 2, complete: false}
     ]);
-    const [recipeData, setRecipeData] = useState(null)
-    
-    const [currentStep, setCurrentStep] = useState<any>({label: "Details", value: 0});
-    const [recipeInfo, setRecipeInfo] = useState<RecipeInfo>({
+    const [currentStep, setCurrentStep] = useState<any>({label: "Details", value: 0, complete: false});
+    const [recipeInfo, setRecipeInfo] = useState<any>({
         recipe_name: '',
         recipe_desc: '',
         recipe_method: '',
         recipe_image: '',
+        recipe_image_id: '',
         recipe_ingredients: [{ingredientName: '', quantity: ''}],
         users_user_id: userObj.userInfo.listokId
     })
-
+    
     const fetchRecipeById = async () => {
         try {
             const response = await axios.get(`/api/recipe/${recipeId}`);
-            setRecipeData(response.data);
+            setRecipeInfo({...response.data, recipe_ingredients: JSON.parse(response.data.recipe_ingredients)});
         } catch (err) {
             console.error(err);
         }
@@ -119,12 +117,14 @@ const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
 
     const uploadRecipe = async(recipe: any) => {
         try {
-            // Convert blob URL to blob
             const response = await fetch(recipe.recipe_image);
             const blob = await response.blob();
     
-            // Prepare FormData
             const formData = new FormData();
+            if (recipeId) {
+                formData.append("recipe_id", recipeId.toString());
+                formData.append("image_id", recipeInfo.recipe_image_id.toString());
+            }
             formData.append("recipe_name", recipe.recipe_name);
             formData.append("recipe_desc", recipe.recipe_desc);
             formData.append("recipe_method", recipe.recipe_method);
@@ -132,13 +132,16 @@ const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
             formData.append("recipe_ingredients", JSON.stringify(recipe.recipe_ingredients));
             formData.append("users_user_id", recipe.users_user_id.toString());
     
-            // Send FormData
-            const apiResponse = await fetch('/api/uploadRecipe', {
+            const apiRoute = recipeId ? '/api/editRecipe' : '/api/uploadRecipe'
+
+            const apiResponse = await fetch(apiRoute, {
                 method: 'POST',
                 body: formData,
             });
+
             const responseData = await apiResponse.json();
             console.log('Success:', responseData);
+
         } catch (error) {
             console.error('Error:', error);
         }
