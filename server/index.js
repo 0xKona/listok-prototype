@@ -21,29 +21,41 @@ const port = process.env.PORT;
 console.log(port)
 
 app.use(
-    helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "https://accounts.google.com", // Allow scripts from Google's accounts domain
-          "https://apis.google.com", // Allow scripts for Google's authentication service
-          "'unsafe-inline'", // Use cautiously
-          "'unsafe-eval'", // Use cautiously
-        ],
-        frameSrc: [
-          "https://accounts.google.com", // Allow iframes from Google's accounts domain
-        ],
-        connectSrc: [
-          "'self'",
-          "https://accounts.google.com", // Allow connections to Google's accounts domain
-          "https://apis.google.com", // Might be needed depending on Google services used
-        ],
-        // Include other directives as needed
-      },
-      reportOnly: false,
-    })
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "https://accounts.google.com", // Allow scripts from Google's accounts domain
+        "https://apis.google.com", // Allow scripts for Google's authentication service
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+      ],
+      frameSrc: [
+        "https://accounts.google.com", // Allow iframes from Google's accounts domain
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+      ],
+      connectSrc: [
+        "'self'",
+        "https://accounts.google.com", // Allow connections to Google's accounts domain
+        "https://apis.google.com", // Might be needed depending on Google services used
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+        "blob:", //allows sending blob images
+      ],
+      imgSrc: [
+        "'self'",
+        "https://lh3.googleusercontent.com", // Allow images from Google's content domain
+        // You might also need to allow data: URIs for inline images and blobs
+        "data:", // Use cautiously
+        "blob:" // allow blob images
+      ],
+    },
+    reportOnly: false,
+  })
 );
+
   
   
 

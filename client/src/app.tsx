@@ -8,7 +8,7 @@ import { LoginPage } from "./pages/login-page";
 const App = () => {
     
     const {userObj, clientId} = useContext(UserContext)
-
+    console.log('**USER OBJ:: ', userObj)
     useEffect(() => {
         const start = async() => {
             try {

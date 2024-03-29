@@ -27,17 +27,27 @@ apiRouter.post('/login', async (req, res) => {
         
         const payload = ticket.getPayload();
         const googleId = payload.sub;
-
         // Combine user check and creation logic for efficiency
         let user = await queries.checkIfUserExists(googleId);
-        if (user.length === 0) {
+
+        if (user[0].length === 0) {
+            console.log('no user triggered: payload = ', payload)
             await queries.createNewUser(payload.sub, payload.email, payload.name);
             user = await queries.checkIfUserExists(googleId);
+
         }
 
         // Assuming checkIfUserExists always returns an array with user objects
+
+        const userObj = {
+            imageUrl: payload.picture,
+            listokId: user[0][0].user_id,
+            givenName: payload.given_name,
+
+        }
+        
         if (user.length > 0) {
-            res.status(200).json({listokId: user[0].user_id});
+            res.status(200).json(userObj);
         } else {
             throw new Error('User not found after creation attempt');
         }
