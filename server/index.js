@@ -8,6 +8,7 @@ import * as url from 'url';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import apiRouter from './api-router.js';
+import helmet from 'helmet';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
@@ -18,6 +19,46 @@ dotenv.config({ path: path.join(__dirname, './secrets/.env')});
 const app = express();
 const port = process.env.PORT;
 console.log(port)
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "https://accounts.google.com", // Allow scripts from Google's accounts domain
+        "https://apis.google.com", // Allow scripts for Google's authentication service
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+      ],
+      frameSrc: [
+        "https://accounts.google.com", // Allow iframes from Google's accounts domain
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+      ],
+      connectSrc: [
+        "'self'",
+        "https://accounts.google.com", // Allow connections to Google's accounts domain
+        "https://apis.google.com", // Might be needed depending on Google services used
+        "'unsafe-inline'", // Use cautiously
+        "'unsafe-eval'", // Use cautiously
+        "blob:", //allows sending blob images
+      ],
+      imgSrc: [
+        "'self'",
+        "https://lh3.googleusercontent.com", // Allow images from Google's content domain
+        // You might also need to allow data: URIs for inline images and blobs
+        "data:", // Use cautiously
+        "blob:" // allow blob images
+      ],
+    },
+    reportOnly: false,
+  })
+);
+
+  
+  
+
 app.use(cors());
 app.use(webpackMiddleware(compiler, {writeToDisk: false}));
 app.set('view engine', 'ejs');

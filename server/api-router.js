@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { OAuth2Client } from 'google-auth-library';
 import multer from 'multer';
+import jwt from 'jsonwebtoken'; // Import jsonwebtoken
 
 const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
@@ -17,43 +18,43 @@ const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID)
 const apiRouter = express.Router();
 
 apiRouter.post('/login', async (req, res) => {
-    
     const { token } = req.body;
 
     try {
-        // Verify the ID token asynchronously
         const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.GOOGLE_OAUTH_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            idToken: token,
+            audience: process.env.GOOGLE_OAUTH_CLIENT_ID,
         });
         
         const payload = ticket.getPayload();
-        const googleId = payload.sub
+        const googleId = payload.sub;
+        let user = await queries.checkIfUserExists(googleId);
 
-        const checkExistingUser = async() => {
-            const response = await queries.checkIfUserExists(googleId);
-    
-            if (response && response[0].length > 0) {
-                return response[0]
-            } else {
-                await queries.createNewUser(
-                    payload.sub,
-                    payload.email,
-                    payload.name
-                )
-                const user = await queries.checkIfUserExists(googleId)
-                return user[0]
-            }
+        if (user[0].length === 0) {
+            console.log('Creating new user: payload = ', payload);
+            await queries.createNewUser(payload.sub, payload.email, payload.name);
+            user = await queries.checkIfUserExists(googleId);
         }
-    
-        const result = await checkExistingUser()
-    
-        res.status(200).send({listokId: result[0].user_id});
-    
-      } catch (error) {
-        console.error("Error verifying Google token:", error);
+
+        // Generate a session token for the user
+        const sessionToken = jwt.sign(
+            { userId: user[0][0].user_id },
+            process.env.JWT_SECRET, // Ensure you have a JWT_SECRET in your .env
+            { expiresIn: '24h' } // Token expires in 24 hours
+        );
+            
+        const userObj = {
+            imageUrl: payload.picture,
+            listokId: user[0][0].user_id,
+            givenName: payload.given_name,
+            sessionToken: sessionToken
+        };
+        // Return the session token along with the user object
+        res.status(200).json(userObj);
+    } catch (error) {
+        console.error("Error verifying Google token or handling user data:", error);
         res.status(401).json({ message: "Unauthorized" });
-      }
+    }
 });
 
 apiRouter.post('/uploadRecipe', upload.single('recipe_image'), async (req, res) => {

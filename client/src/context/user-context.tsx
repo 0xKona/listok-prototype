@@ -18,7 +18,6 @@ export const UserContextProvider = (props: any): JSX.Element => {
     const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" 
     //TODO: Change clientId to import from .env
 
-
     const setNewUserInfo = (newData: any, loggingIn: boolean) => {
         setUserObj({userInfo: newData, loggedIn: loggingIn})
     }
