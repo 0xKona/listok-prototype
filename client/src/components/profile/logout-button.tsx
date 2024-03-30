@@ -10,30 +10,34 @@ const SignOutBtnWrapper = styled.div`
 `;
 
 export const LogoutButton = () => {
-    
     const { setNewUserInfo } = useContext(UserContext);
 
     const handleLogout = () => {
         console.log("Logging out...");
+
+        // Clear user session from local storage or cookies
+        localStorage.removeItem('userData');
+        localStorage.removeItem('sessionToken');
+
+        // Reset user context to reflect logged-out state
+        setNewUserInfo({}, false);
+
         // Use Google's sign out method
-        window.google.accounts.id.disableAutoSelect();
+        if (window.google && window.google.accounts) {
+            window.google.accounts.id.disableAutoSelect();
 
-        // Optionally, revoke the token to fully sign out the user
-        // Note: Replace `token` with the actual token you wish to revoke
-        // fetch(`https://oauth2.googleapis.com/revoke?token=${token}`, {
-        //   method: 'POST',
-        // }).then(() => {
-            console.log("Logged out successfully");
-            setNewUserInfo({}, false);
-        // });
-
-        // You might want to redirect the user to the homepage or a login page
-        // window.location.href = '/';
-    }
+            // Optionally, prompt for re-authentication on next sign in for enhanced security
+            window.google.accounts.id.revoke(localStorage.getItem('userEmail'), () => {
+                console.log("Google user token revoked, user logged out.");
+                // Clear email from local storage if you stored it
+                localStorage.removeItem('userEmail');
+            });
+        }
+    };
 
     return (
         <SignOutBtnWrapper>
-            <button onClick={handleLogout}>Logout of Google</button>
+            <button onClick={handleLogout}>Logout</button>
         </SignOutBtnWrapper>
     );
 };

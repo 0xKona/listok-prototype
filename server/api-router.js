@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { OAuth2Client } from 'google-auth-library';
 import multer from 'multer';
+import jwt from 'jsonwebtoken'; // Import jsonwebtoken
 
 const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
@@ -27,30 +28,29 @@ apiRouter.post('/login', async (req, res) => {
         
         const payload = ticket.getPayload();
         const googleId = payload.sub;
-        // Combine user check and creation logic for efficiency
         let user = await queries.checkIfUserExists(googleId);
 
         if (user[0].length === 0) {
-            console.log('no user triggered: payload = ', payload)
+            console.log('Creating new user: payload = ', payload);
             await queries.createNewUser(payload.sub, payload.email, payload.name);
             user = await queries.checkIfUserExists(googleId);
-
         }
 
-        // Assuming checkIfUserExists always returns an array with user objects
-
+        // Generate a session token for the user
+        const sessionToken = jwt.sign(
+            { userId: user[0][0].user_id },
+            process.env.JWT_SECRET, // Ensure you have a JWT_SECRET in your .env
+            { expiresIn: '24h' } // Token expires in 24 hours
+        );
+            
         const userObj = {
             imageUrl: payload.picture,
             listokId: user[0][0].user_id,
             givenName: payload.given_name,
-
-        }
-        
-        if (user.length > 0) {
-            res.status(200).json(userObj);
-        } else {
-            throw new Error('User not found after creation attempt');
-        }
+            sessionToken: sessionToken
+        };
+        // Return the session token along with the user object
+        res.status(200).json(userObj);
     } catch (error) {
         console.error("Error verifying Google token or handling user data:", error);
         res.status(401).json({ message: "Unauthorized" });
