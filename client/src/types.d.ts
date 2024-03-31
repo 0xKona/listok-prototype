@@ -30,3 +30,18 @@ export interface weekDataInterface {
     users_user_id: number | null;
     dayData: dayDataInterface
 }
+
+export interface recipeData {
+    recipe_id: number | null;
+    recipe_name: string;
+    recipe_desc: string;
+    recipe_image_id: number;
+    recipe_ingredients: string;
+    recipe_method: string;
+    users_user_id: number;
+}
+
+export interface showRecipeEditorInterface {
+    open: boolean;
+    recipeId: number | null;
+}

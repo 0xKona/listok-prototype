@@ -8,6 +8,7 @@ import ShoppingList from "../components/shopping-list";
 import RecipeEditor from "../components/recipe-editor/recipe-editor";
 import { WeekContext } from "../context/week-context";
 import { DragDropContext } from "react-beautiful-dnd";
+import { showRecipeEditorInterface } from "../types";
 
 const Testdaycontainer = styled.div`
     display:flex;
@@ -21,7 +22,7 @@ const RecipeListContainer = styled.div`
 
 const HomePage = (): JSX.Element => {
     const { weekData, setWeekData } = useContext(WeekContext)
-    const [showRecipeEditor, setShowRecipeEditor] = useState<any>({open: false, recipeId: null});
+    const [showRecipeEditor, setShowRecipeEditor] = useState<showRecipeEditorInterface>({open: false, recipeId: null});
     
     const onDragEnd = async(result: any) => {
 

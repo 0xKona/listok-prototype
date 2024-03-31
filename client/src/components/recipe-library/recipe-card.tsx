@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaRegEdit } from "react-icons/fa";
+import { recipeData, showRecipeEditorInterface } from "../../types";
 
 
 const Container = styled.div<{ backgroundImage?: string }>`
@@ -8,7 +9,6 @@ const Container = styled.div<{ backgroundImage?: string }>`
     width: 150px;
     margin: 5px;
     border-radius: 15px;
-    background-color: orange;
     box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
     &:hover{
         transform: scale(1.05);
@@ -37,11 +37,6 @@ const RecipeTitleWrapper = styled.div`
     -webkit-backdrop-filter: blur(8.4px);
     text-align: center;
 `
-// const ButtonArea = styled.div`
-//     background-color: pink;
-//     width: 100%;
-//     flex-grow: 1;
-// `
 const EditBtn = styled.button`
     width: 100%;
     height: 20%;
@@ -54,14 +49,12 @@ const EditBtn = styled.button`
 `
 
 interface RecipeCardProps {
-    recipe: {
-        recipe_id: number;
-        recipe_name: string;
-        recipe_image_id: number;
-    };
+    recipe: recipeData;
+    setShowRecipeEditor: React.Dispatch<React.SetStateAction<showRecipeEditorInterface>>
 }
 
-const RecipeCard = ({ recipe, setShowRecipeEditor }: any): JSX.Element => {
+const RecipeCard = ({ recipe, setShowRecipeEditor }: RecipeCardProps): JSX.Element => {
+    console.log('Recipe: ', recipe)
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
     useEffect(() => {
@@ -87,11 +80,9 @@ const RecipeCard = ({ recipe, setShowRecipeEditor }: any): JSX.Element => {
                     <p>{recipe.recipe_name}</p>
                 </RecipeTitleWrapper>
             </ImageArea>
-                {/* <ButtonArea> */}
-                    <EditBtn onClick={() => setShowRecipeEditor({open: true, recipeId: recipe.recipe_id})}>
-                        Edit <FaRegEdit style={{marginLeft: 10}} size={15}/>
-                    </EditBtn>
-                {/* </ButtonArea> */}
+            <EditBtn onClick={() => setShowRecipeEditor({open: true, recipeId: recipe.recipe_id})}>
+                Edit <FaRegEdit style={{marginLeft: 10}} size={15}/>
+            </EditBtn>
         </Container>
     );
 };
