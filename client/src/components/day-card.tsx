@@ -11,22 +11,19 @@ const CardContainer = styled.div`
     box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
     border-radius: 10px;
     padding: 10px;
-    background-color: white; // Feel free to adjust styling
+    background-color: white;
 `;
 
 const DayCard = ({ day }: { day: string }): JSX.Element => {
 
     const {weekData, setWeekData} = useContext(WeekContext);
     const [recipe, setRecipe] = useState<any>(null);
-    const [error, setError] = useState('');
     
     const fetchRecipeById = async () => {
         try {
             const response = await axios.get(`/api/recipe/${weekData.dayData[day]}`);
             setRecipe(response.data);
         } catch (err) {
-            // Error handling
-            setError('Failed to fetch recipe');
             console.error(err);
         }
     };

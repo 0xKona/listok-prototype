@@ -54,7 +54,7 @@ interface RecipeCardProps {
 }
 
 const RecipeCard = ({ recipe, setShowRecipeEditor }: RecipeCardProps): JSX.Element => {
-    console.log('Recipe: ', recipe)
+
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
     useEffect(() => {
