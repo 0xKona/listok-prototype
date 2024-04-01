@@ -134,9 +134,11 @@ const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
     
             const apiRoute = recipeId ? '/api/editRecipe' : '/api/uploadRecipe'
 
-            await fetch(apiRoute, {
-                method: 'POST',
-                body: formData,
+            const result = await axios.post(apiRoute, formData, {
+                headers: {
+                    // Content-Type will be set automatically by the browser
+                    'Accept': 'application/json',
+                },
             });
 
         } catch (error) {

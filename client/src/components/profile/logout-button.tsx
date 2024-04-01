@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { UserContext } from '../../context/user-context';
 import styled from 'styled-components';
+import { WeekContext } from '../../context/week-context';
 
 const SignOutBtnWrapper = styled.div`
     width: 100%;
@@ -11,6 +12,7 @@ const SignOutBtnWrapper = styled.div`
 
 export const LogoutButton = () => {
     const { setNewUserInfo } = useContext(UserContext);
+    const { weekData, setWeekData } = useContext(WeekContext)
 
     const handleLogout = () => {
         // Clear user session from local storage
@@ -29,6 +31,21 @@ export const LogoutButton = () => {
                 console.log("Google user token revoked, user logged out.");
             });
         }
+
+        setWeekData({
+            ...weekData,
+            dayData: {
+                mon: null,
+                tue: null,
+                wed: null,
+                thur: null,
+                fri: null,
+                sat: null, 
+                sun: null
+            }
+        })
+
+        
     };
 
     return (

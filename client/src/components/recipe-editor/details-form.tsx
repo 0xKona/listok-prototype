@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { muiInputStyles } from "../../styles/global";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
-
+import axios from 'axios';
+import { base64ToBlob } from "../../utils/utils";
 
 const FormWrapper = styled.div`
     display: flex;
@@ -81,19 +82,26 @@ const DetailsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipeInfo
         if (recipeInfo.recipe_image_id) {
             const fetchImage = async () => {
                 try {
-                    const response = await fetch(`/api/image/${recipeInfo.recipe_image_id}`);
-                    const base64Image = await response.text();
-                    setRecipeImage(`data:image/jpeg;base64,${base64Image}`);
+                    const response = await axios.get(`/api/image/${recipeInfo.recipe_image_id}`, {
+                        responseType: 'text' // Ensure you're expecting a text response for the base64 data
+                    });
+                    const base64Image = response.data;
+                    // Convert base64 string to a Blob
+                    const imageBlob = base64ToBlob(base64Image, 'image/jpeg');
+                    // Create an object URL for the Blob
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    // Set the object URL as the image source
+                    setRecipeImage(imageObjectURL);
                 } catch (error) {
                     console.error("Error fetching image:", error);
                 }
             };
     
-            if (recipeInfo.recipe_image_id) {
-                fetchImage();
-            }
+            fetchImage();
         }
-    }, [recipeInfo.recipe_image_id])
+    }, [recipeInfo.recipe_image_id]);
+    
+    
 
     useEffect(() => {
         setRecipeName(recipeInfo.recipe_name)
