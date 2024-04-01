@@ -5,7 +5,7 @@ services:
   listok_db:
     image: mysql:latest
     restart: always
-    env_file: ./server/secrets/.env
+    env_file: ./.env
     ports:
       - "3306:3306" # Port mapping correction
     volumes: 

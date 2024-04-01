@@ -11,7 +11,7 @@ Getting Started:
 1. Run `npm install` to install packages!
 
 2. Configureyour `.env` file:
-    <br> -> Create a file called '.env' in `server/secrets/`, you will need to create the `secrets` folder in `server` 
+    <br> -> Create a file called '.env' in the root of the project.
     <br> -> Inside the `.env` file you will need to simply add PORT=`YOUR PORT NUMBER` for example `PORT=3000`
 
 3. Run Listok!:

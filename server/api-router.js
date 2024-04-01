@@ -11,11 +11,17 @@ const upload = multer({ storage: multer.memoryStorage() }); // Store files in me
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, './secrets/.env')});
+dotenv.config({ path: path.join(__dirname, '../.env')});
 
 const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID)
 
 const apiRouter = express.Router();
+
+apiRouter.get('/config', (req, res) => {
+    res.json({
+        clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
+    });
+});
 
 apiRouter.post('/login', async (req, res) => {
     const { token } = req.body;
@@ -31,7 +37,6 @@ apiRouter.post('/login', async (req, res) => {
         let user = await queries.checkIfUserExists(googleId);
 
         if (user[0].length === 0) {
-            console.log('Creating new user: payload = ', payload);
             await queries.createNewUser(payload.sub, payload.email, payload.name);
             user = await queries.checkIfUserExists(googleId);
         }
@@ -164,6 +169,32 @@ apiRouter.post('/updateWeek/', async (req, res) => {
         res.status(500).json({ message: "Error updating week" });
     }
 });
+
+apiRouter.get('/getIngredients', async (req, res) => {
+    let { recipeIds } = req.query; // Expected to be a string of comma-separated values
+
+    // Parsing the recipeIds query parameter into an array of numbers
+    // and filtering out any null or invalid values
+    recipeIds = recipeIds
+        .split(',')
+        .map(id => parseInt(id, 10))
+        .filter(id => !isNaN(id) && id != null);
+
+    // If after filtering, there are no valid IDs, return an empty array or appropriate response
+    if (recipeIds.length === 0) {
+        return res.status(200).json([]); // or any other appropriate response
+    }
+
+    try {
+        const ingredients = await queries.getIngredientsForRecipes(recipeIds);
+        res.status(200).send(ingredients);
+    } catch (error) {
+        console.error('Error fetching week ingredients:', error);
+        res.status(500).json({ message: "Error fetching week ingredients" });
+    }
+});
+
+
 
 
 

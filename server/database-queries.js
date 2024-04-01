@@ -6,7 +6,7 @@ import { promises as fs } from 'fs'; // Node.js File System module with Promises
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
-dotenv.config({ path: path.join(__dirname, './secrets/.env')});
+dotenv.config({ path: path.join(__dirname, '../.env')});
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
@@ -18,7 +18,7 @@ const pool = mysql.createPool({
 
 pool.getConnection((error, connection) => {
     if (connection) {
-        console.log('Database connected succesfully')
+        console.log('[server]: Database connected succesfully')
     } else {
         console.log('Error connecting to database, the following error occured: ', error)
     }
@@ -174,6 +174,36 @@ queries.updateWeekData = async (weekId, weekData) => {
         throw error;
     }
 };
+
+queries.getIngredientsForRecipes = async (recipeIds) => {
+    let allIngredients = [];
+
+    const validRecipeIds = recipeIds.filter(id => id != null);
+
+    try {
+        for (let recipeId of validRecipeIds) {
+            const query = `
+                SELECT recipe_ingredients 
+                FROM recipes 
+                WHERE recipe_id = ?
+            `;
+
+            const [results] = await pool.query(query, [recipeId]);
+
+            if (results.length > 0) {
+                const ingredients = JSON.parse(results[0].recipe_ingredients || '[]');
+                allIngredients = [...allIngredients, ...ingredients];
+            }
+        }
+        return allIngredients;
+    } catch (error) {
+        console.error('Error fetching ingredients for recipes:', error);
+        throw error;
+    }
+};
+
+
+
 
 
 

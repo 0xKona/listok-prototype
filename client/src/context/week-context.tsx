@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { weekDataInterface } from '../types';
 import { UserContext } from './user-context';
+import { startOfWeek, format } from 'date-fns';
 
 interface WeekContextInterface {
     weekData: any;
@@ -17,11 +18,8 @@ export const WeekContextProvider = (props: any): JSX.Element => {
 
     const getMostRecentMonday = () => {
         const today = new Date();
-        const dayOfWeek = today.getDay();
-        const difference = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-        const mostRecentMonday = new Date(today.setDate(today.getDate() - difference));
-    
-        return mostRecentMonday.toISOString().split('T')[0];
+        const mostRecentMonday = startOfWeek(today, { weekStartsOn: 1 }); // 1 is Monday
+        return format(mostRecentMonday, 'yyyy-MM-dd');
     }
 
     const [weekData, setWeekData] = useState<weekDataInterface>({

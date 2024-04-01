@@ -14,11 +14,10 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 const compiler = webpack(webpackConfig);
 
-dotenv.config({ path: path.join(__dirname, './secrets/.env')});
+dotenv.config({ path: path.join(__dirname, '../.env')});
 
 const app = express();
 const port = process.env.PORT;
-console.log(port)
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -55,9 +54,6 @@ app.use(
     reportOnly: false,
   })
 );
-
-  
-  
 
 app.use(cors());
 app.use(webpackMiddleware(compiler, {writeToDisk: false}));

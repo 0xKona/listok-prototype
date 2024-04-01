@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import axios from 'axios';
+import React, { createContext, useEffect, useState } from 'react';
 
 interface UserContextInterface {
     userObj: any;
@@ -14,9 +15,20 @@ export const UserContext = createContext<UserContextInterface>({
 
 export const UserContextProvider = (props: any): JSX.Element => {
     const [userObj, setUserObj] = useState({loggedIn: false, userInfo: {}});
+    const [clientId, setClientId] = useState("");
 
-    const clientId = "487824460304-7enq26pcdfqpfe6r3rbpv034o9inoptt.apps.googleusercontent.com" 
-    //TODO: Change clientId to import from .env
+    useEffect(() => {
+        const fetchConfig = async () => {
+            try {
+                const response = await axios.get('/api/config');
+                setClientId(response.data.clientId);
+            } catch (error) {
+                console.error('Error fetching clientId:', error);
+            }
+        };
+
+        fetchConfig();
+    }, [!clientId]);
 
     const setNewUserInfo = (newData: any, loggingIn: boolean) => {
         setUserObj({userInfo: newData, loggedIn: loggingIn})

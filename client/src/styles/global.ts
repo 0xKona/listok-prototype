@@ -11,6 +11,9 @@ export default createGlobalStyle`
     #root {
         margin: 0 auto;
     }
+    body {
+        padding: 0;
+    }
 `
 
 export const muiInputStyles = {

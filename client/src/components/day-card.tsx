@@ -9,8 +9,10 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 const CardContainer = styled.div<{ backgroundImage?: string }>`
     margin: 10px;
-    height: 200px;
-    width: 150px;
+    min-height: 200px;
+    min-width: 150px;
+    width: 14%;
+    flex-grow: 1;
     box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
     border-radius: 10px;
     background-color: white;
@@ -34,6 +36,7 @@ const ResetButton = styled.button`
     border: none;
     margin-top: auto;
     border-radius: 0 0 10px 10px;
+    cursor: pointer;
 `
 const RecipeName = styled.div`
     margin:  30px 10px;
@@ -126,11 +129,12 @@ const DayCard = ({ day }: Props): JSX.Element => {
                         <p>{recipe ? recipe.recipe_name : 'Drag a recipe here from your Recipe Library!'}</p>
                     </RecipeName>
                     
+                    {provided.placeholder}
+
                     <ResetButton onClick={resetRecipe}>
                         <FaRegTrashCan size={20}/>
                     </ResetButton>
                   
-                    {provided.placeholder}
                 </CardContainer>
             )}
         </Droppable>

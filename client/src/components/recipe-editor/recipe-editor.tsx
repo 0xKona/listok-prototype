@@ -134,13 +134,10 @@ const RecipeEditor = ({recipeId, setShowRecipeEditor}: props) => {
     
             const apiRoute = recipeId ? '/api/editRecipe' : '/api/uploadRecipe'
 
-            const apiResponse = await fetch(apiRoute, {
+            await fetch(apiRoute, {
                 method: 'POST',
                 body: formData,
             });
-
-            const responseData = await apiResponse.json();
-            console.log('Success:', responseData);
 
         } catch (error) {
             console.error('Error:', error);

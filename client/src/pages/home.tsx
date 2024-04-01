@@ -10,14 +10,21 @@ import { WeekContext } from "../context/week-context";
 import { DragDropContext } from "react-beautiful-dnd";
 import { showRecipeEditorInterface } from "../types";
 
-const Testdaycontainer = styled.div`
+const DayContainer = styled.div`
     display:flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    overflow-x: scroll;
+    @media (width <= 1190px) {
+        justify-content: flex-start;
+    }
 `
 const RecipeListContainer = styled.div`
-    margin: 10px 15px;
     display: flex;
-    justify-content: space-between;
+    min-height: 60%;
+    max-width: 100vw;
+    @media (width <= 900px) {
+        flex-direction: column;
+    }
 `
 
 const HomePage = (): JSX.Element => {
@@ -60,13 +67,13 @@ const HomePage = (): JSX.Element => {
             :
                 <>
                     <WeekNavigator />
-                    <Testdaycontainer>
-                    {
-                        Object.keys(weekData.dayData).map((weekday: any) =>(
-                            <DayCard key={weekday} day={weekday}/>
-                        ))
-                    }
-                    </Testdaycontainer>
+                    <DayContainer>
+                        {
+                            Object.keys(weekData.dayData).map((weekday: any) =>(
+                                <DayCard key={weekday} day={weekday}/>
+                            ))
+                        }
+                    </DayContainer>
                     <RecipeListContainer>
                         <RecipeLibrary setShowRecipeEditor={setShowRecipeEditor}/>
                         <ShoppingList />
