@@ -10,6 +10,14 @@ const SignOutBtnWrapper = styled.div`
     align-items: center;
 `;
 
+const Button = styled.button`
+    width: 100%;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+    border: none;
+    cursor: pointer;
+`
+
 export const LogoutButton = () => {
     const { setNewUserInfo } = useContext(UserContext);
     const { weekData, setWeekData } = useContext(WeekContext)
@@ -50,7 +58,7 @@ export const LogoutButton = () => {
 
     return (
         <SignOutBtnWrapper>
-            <button onClick={handleLogout}>Logout</button>
+            <Button onClick={handleLogout}>Logout</Button>
         </SignOutBtnWrapper>
     );
 };

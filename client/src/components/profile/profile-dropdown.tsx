@@ -7,15 +7,14 @@ import { LogoutButton } from "./logout-button";
 import { UserContext } from "../../context/user-context";
 
 const DropDownMenuContainer = styled.div`
-    width: 200px;
+    width: 250px;
     height: fit-content;
     position: absolute;
-    z-index: 10;
+    z-index: 1;
     right: 10px;
-    top: 60px;
-    padding: 20px;
+    top: 55px;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 0 0 10px 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -26,7 +25,7 @@ const DropDownMenuContainer = styled.div`
 `
 const Greeting = styled.h1`
     font-size: 30;
-    margin-bottom: 20px;
+    margin: 20px;
 `
 
 const ProfileMenu = (): JSX.Element => {

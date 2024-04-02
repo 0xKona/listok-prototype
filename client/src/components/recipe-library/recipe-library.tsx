@@ -14,7 +14,6 @@ import { Draggable, Droppable } from 'react-beautiful-dnd'
 // then user cannot scroll and is unable to load more
 
 const Container = styled.div`
-    width: 100%;
     max-width: 100%;
     flex-grow: 1;
     box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.75);
