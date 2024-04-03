@@ -26,7 +26,6 @@ const Title = styled.div`
     align-items: center;
 `
 const Ingredients = styled.div`
-    background-color: pink;
     padding: 10px;
     margin-top: 20px;
 `
@@ -36,14 +35,14 @@ const ShoppingList = (): JSX.Element => {
     const [ingredients, setIngredients] = useState<any>()
     const {weekData} = useContext(WeekContext);
     const [loading, setLoading] = useState(false)
-  
+    console.log(JSON.stringify(ingredients))
     const getIngredients = async () => {
         try {
             setLoading(true)
             const recipeIds = Object.values(weekData.dayData).join(',');
     
             // Fetch the ingredients data
-            const response = await axios.get(`/api/getIngredients?recipeIds=${recipeIds}`);
+            const response = await axios.get(`/api/getIngredients?recipeIds=${recipeIds}&weekId=${weekData.week_id}`);
             setIngredients(response.data);
             setTimeout(() => setLoading(false), 1000)
         } catch (error) {
@@ -70,8 +69,7 @@ const ShoppingList = (): JSX.Element => {
             </Title>
             <Ingredients>
                 {ingredients?.map((ingredient: any, index: number) => (
-                    <ShoppingItem key={index} ingredient={ingredient} />
-                    // <p key={index}>{`${ingredient.quantity} ${ingredient.ingredientName}`}</p>
+                    <ShoppingItem key={index} ingredient={ingredient} ingredientIndex={index}/>
                 ))
                 }
             </Ingredients>

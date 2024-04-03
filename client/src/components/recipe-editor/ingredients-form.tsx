@@ -1,4 +1,3 @@
-import { TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from '@mui/material/Button';
@@ -71,7 +70,7 @@ const IngredientsForm = ({steps, setSteps, setCurrentStep, recipeInfo, setRecipe
     }
 
     const addNewIngredient = () => {
-        const newArray = [...ingredientsArray, {ingredientName: '', quantity: ''}];
+        const newArray = [...ingredientsArray, {ingredientName: '', quantity: '', unit: '', category: 'Other', checked: false}];
         setIngredientsArray(newArray)
     }
     

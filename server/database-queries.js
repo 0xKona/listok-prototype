@@ -176,12 +176,19 @@ queries.updateWeekData = async (weekId, weekData) => {
 };
 
 queries.getIngredientsForRecipes = async (recipeIds) => {
+    const ingredientsCount = {}; // Object to hold the count of each ingredient
     let allIngredients = [];
 
-    const validRecipeIds = recipeIds.filter(id => id != null);
+    // Count occurrences of each recipeId
+    const recipeIdCounts = recipeIds.reduce((acc, id) => {
+        acc[id] = (acc[id] || 0) + 1;
+        return acc;
+    }, {});
+
+    const uniqueRecipeIds = Object.keys(recipeIdCounts);
 
     try {
-        for (let recipeId of validRecipeIds) {
+        for (let recipeId of uniqueRecipeIds) {
             const query = `
                 SELECT recipe_ingredients 
                 FROM recipes 
@@ -192,9 +199,28 @@ queries.getIngredientsForRecipes = async (recipeIds) => {
 
             if (results.length > 0) {
                 const ingredients = JSON.parse(results[0].recipe_ingredients || '[]');
-                allIngredients = [...allIngredients, ...ingredients];
+
+                // Multiply quantities by the count of the recipeId
+                const adjustedIngredients = ingredients.map(ingredient => ({
+                    ...ingredient,
+                    quantity: ingredient.quantity * recipeIdCounts[recipeId]
+                }));
+
+                // Aggregate ingredients
+                adjustedIngredients.forEach(ingredient => {
+                    const key = `${ingredient.ingredientName}-${ingredient.unit}-${ingredient.category}`;
+                    if (ingredientsCount[key]) {
+                        ingredientsCount[key].quantity += ingredient.quantity;
+                    } else {
+                        ingredientsCount[key] = { ...ingredient };
+                    }
+                });
             }
         }
+
+        // Convert the ingredientsCount object back to an array
+        allIngredients = Object.values(ingredientsCount);
+
         return allIngredients;
     } catch (error) {
         console.error('Error fetching ingredients for recipes:', error);

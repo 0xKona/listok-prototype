@@ -171,10 +171,8 @@ apiRouter.post('/updateWeek/', async (req, res) => {
 });
 
 apiRouter.get('/getIngredients', async (req, res) => {
-    let { recipeIds } = req.query; // Expected to be a string of comma-separated values
-
-    // Parsing the recipeIds query parameter into an array of numbers
-    // and filtering out any null or invalid values
+    let { recipeIds, weekId } = req.query; // Expected to be a string of comma-separated values
+    // console.log(weekId) // FOR FUTURE: to persist shopping list checked flag on ingredients
     recipeIds = recipeIds
         .split(',')
         .map(id => parseInt(id, 10))
@@ -193,10 +191,6 @@ apiRouter.get('/getIngredients', async (req, res) => {
         res.status(500).json({ message: "Error fetching week ingredients" });
     }
 });
-
-
-
-
 
 
 export default apiRouter
