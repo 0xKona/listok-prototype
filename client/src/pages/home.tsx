@@ -10,25 +10,46 @@ import { WeekContext } from "../context/week-context";
 import { DragDropContext } from "react-beautiful-dnd";
 import { showRecipeEditorInterface } from "../types";
 
+//TODO: Known bug: weekday recipes do not load on first instance of logging in, must reload
+
 const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
     max-width: 100vw;
-`
+    height: 100vh; /* Fill the full viewport height */
+    overflow: hidden; /* Prevent scrolling on the wrapper */
+    @media (max-height: 1200px) {
+        height: fit-content;
+    }
+`;
+
+const BodyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make BodyWrapper take the remaining space */
+    overflow: hidden; /* Avoid scroll inside BodyWrapper */
+`;
+
 const DayContainer = styled.div`
-    display:flex;
+    display: flex;
     justify-content: space-evenly;
     overflow-x: scroll;
-    @media (width <= 1190px) {
+    min-height: fit-content;
+    margin-bottom: 20px;
+    @media (max-width: 1190px) {
         justify-content: flex-start;
     }
-`
+`;
+
 const RecipeListContainer = styled.div`
     display: flex;
-    min-height: 60%;
+    flex-grow: 1; /* Make RecipeListContainer expand to fill the available space */
     max-width: 100%;
-    @media (width <= 900px) {
+    overflow-y: auto; /* Allow scrolling within RecipeListContainer */
+    @media (max-width: 900px) {
         flex-direction: column;
     }
-`
+`;
 
 const HomePage = (): JSX.Element => {
     const { weekData, setWeekData } = useContext(WeekContext)
@@ -69,7 +90,7 @@ const HomePage = (): JSX.Element => {
                 {showRecipeEditor.open ?
                     <RecipeEditor recipeId={showRecipeEditor.recipeId} setShowRecipeEditor={setShowRecipeEditor}/>
                 :
-                    <>
+                    <BodyWrapper>
                         <WeekNavigator />
                         <DayContainer>
                             {
@@ -82,7 +103,7 @@ const HomePage = (): JSX.Element => {
                             <RecipeLibrary setShowRecipeEditor={setShowRecipeEditor}/>
                             <ShoppingList />
                         </RecipeListContainer>
-                    </>
+                    </BodyWrapper>
                 }
         </Wrapper>
             </DragDropContext>

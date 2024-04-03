@@ -12,8 +12,22 @@ export default createGlobalStyle`
         margin: 0 auto;
     }
     body {
+        max-width: 100vw;
         padding: 0;
     }
+    @media print {
+    body * {
+      visibility: hidden;
+    }
+    .printable, .printable * {
+      visibility: visible;
+    }
+    .printable {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
 `
 
 export const muiInputStyles = {

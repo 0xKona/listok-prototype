@@ -19,7 +19,6 @@ const Wrapper = styled.div`
     min-height: 100%;
     display: flex;
     justify-content: center;
-    background-color: cyan;
     padding: 20px 0px;
 `
 const RecipeEditorContainer = styled.div`
