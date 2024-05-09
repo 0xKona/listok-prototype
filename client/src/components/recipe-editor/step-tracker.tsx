@@ -1,5 +1,5 @@
+import React from "react";
 import { Step, StepLabel, Stepper } from "@mui/material";
-import React, { useState } from "react";
 import styled from "styled-components";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { StepIconProps } from '@mui/material/StepIcon';

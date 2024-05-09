@@ -8,10 +8,8 @@ import MethodForm from "./method-form";
 import IngredientsForm from "./ingredients-form";
 import axios from "axios";
 
-//TODO Styling issues on smaller screen sizes
 //TODO Replace any types
 //TODO If any Errors on any form do not allow submission of data to server
-//TODO Logic for editing existing recipe (backend api's for this should already be set up)
 
 const Wrapper = styled.div`
     width: 100%;
