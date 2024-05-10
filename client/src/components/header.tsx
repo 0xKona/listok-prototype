@@ -9,7 +9,7 @@ import { ReactComponent as Logo} from "../assets/logo.svg";
 const HeaderContainer = styled.div<StyleProps>`
     height: 50px;
     width: 100vw;
-    background-color: ${props => props.colors.background};
+    background-color: ${props => props.colors.baseSurface};
     display: flex;
     justify-content: center;
     align-items: center;

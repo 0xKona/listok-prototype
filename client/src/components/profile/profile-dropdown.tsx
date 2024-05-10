@@ -5,6 +5,7 @@ import { ThemeContext } from "../../context/theme-context";
 import { themesObject } from "../../context/themes";
 import { LogoutButton } from "./logout-button";
 import { UserContext } from "../../context/user-context";
+import DarkModeToggle from "./darkmode-toggle";
 
 const DropDownMenuContainer = styled.div`
     width: 250px;
@@ -35,6 +36,7 @@ const ProfileMenu = (): JSX.Element => {
     return (
         <DropDownMenuContainer>
             <Greeting>{`Hi ${userName.charAt(0).toUpperCase() + userName.toLowerCase().slice(1)}!`}</Greeting>
+            <DarkModeToggle />
             <LogoutButton/>
         </DropDownMenuContainer>   
     )
